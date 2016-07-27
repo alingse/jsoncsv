@@ -1,6 +1,22 @@
 # jsoncsv
 将多层次的json转为一层次的json，再转成csv或者xlsx
-
+ 
+展开为1层
+ 
+```
+echo '{"s":[1,2,{"w":1}]}'|./jsoncsv/jsoncsv.py -e |jq -r ''
+{
+  "s.2.w": 1,
+  "s.0": 1,
+  "s.1": 2
+}
+```
+**制作xlsx** 
+  
+```
+cat raw.json|./jsoncsv.py -e |./mkexcel.py > test.xls
+```
+ 
 
 ## 来源说明
 因为做爬虫时，经常数据是json 格式的，而很多**客户需要看excel 的，需要耗费人力去填表格。
@@ -102,3 +118,21 @@ echo '{"0":1,"2":[1,2]}'|./jsoncsv/jsoncsv.py -e|./jsoncsv/jsoncsv.py -r
  
  
  
+## 测试
+
+这次没有加unittest 下次加上
+目前是
+
+```python -m test.test```
+
+
+## TODO
+
+以下按顺序来做，
+
+1. 增加unittest ，
+2. 更多的出错检查
+3. 把文件读写从jsoncsv 中分离出来看
+4. mkexcel 重构
+5. 构建包
+  
