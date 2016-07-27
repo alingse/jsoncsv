@@ -9,43 +9,52 @@ import argparse
 import sys
 
 
-def expand_json(json_obj, head = None):
-    exp_obj = {}
-    if type(json_obj) == dict:
-        for key in json_obj:
+def expand(origin):
+    #gen net obj keys
+    def gen_next(obj,head=None):
+        exp = {}
+        if type(obj) == dict:
+            for key in obj:
+                if head == None:
+                    k_head = key
+                else:
+                    k_head = '{}.{}'.format(head,key)
+
+                k_obj = obj[key]
+                k_exp = gen_next(k_obj, head=k_head)
+                exp.update(k_exp)
+        elif type(obj) == list:
+            for i,i_obj in enumerate(obj):
+                if head == None:
+                    #this is important,so the json forbidden number key
+                    i_head = str(i)
+                else:
+                    i_head = '{}.{}'.format(head,i)
+
+                i_exp = gen_next(i_obj, head=i_head)
+                exp.update(i_exp)
+        else:
             if head == None:
-                k_head = key
-            else:
-                k_head = '{}.{}'.format(head,key)
+                head = ''
 
-            k_obj = json_obj[key]
-            k_exp_obj = expand_json(k_obj,head = k_head)
-            exp_obj.update(k_exp_obj)
+            value = obj
+            _exp = {head:value}
 
-    elif type(json_obj) == list:
-        for i in range(len(json_obj)):
-            if head == None:
-                i_head = str(i)
-            else:
-                i_head = '{}.{}'.format(head,i)
+            exp.update(_exp)
 
-            i_obj = json_obj[i]
-            i_exp_obj = expand_json(i_obj,head = i_head)
-            exp_obj.update(i_exp_obj)
+        return exp
 
-    else:
-        if head == None:
-            head = ''
-
-        value = json_obj
-        exp_obj[head] = value
-
-    return exp_obj
+    expobj = gen_next(origin,head=None)
+    return expobj
    
 
+def restore(expobj):
+
+    def from_next(keys_value_list):
+        pass
+        #if len()
 
 
-def contract_json(exp_obj):
     return exp_obj
 
 '''
