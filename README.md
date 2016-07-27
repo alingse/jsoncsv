@@ -1,7 +1,7 @@
 # jsoncsv
 将多层次的json转为一层次的json，再转成csv或者xlsx
  
-展开为1层
+**展开为1层json**
  
 ```
 echo '{"s":[1,2,{"w":1}]}'|./jsoncsv/jsoncsv.py -e |jq -r ''
@@ -17,6 +17,7 @@ echo '{"s":[1,2,{"w":1}]}'|./jsoncsv/jsoncsv.py -e |jq -r ''
 cat raw.json|./jsoncsv.py -e |./mkexcel.py > test.xls
 ```
  
+
 
 ## 来源说明
 因为做爬虫时，经常数据是json 格式的，而很多**客户需要看excel 的，需要耗费人力去填表格。
