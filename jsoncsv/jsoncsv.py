@@ -50,12 +50,36 @@ def expand(origin):
 
 def restore(expobj):
 
-    def from_next(keys_value_list):
+    def from_child(res_list):
+        keyslist,valus=zip(*res_list)
+        N = len(keyslist)
+        #the break
+        #this group only one
+        if N == 1 and keyslist[0] == []:
+            #return the value
+            return values[0]
+        head_key_list = [keys.pop(0) for keys in keyslist]
+        '''
+        if filter(lambda x:x.isdigt())
+
+
+
+        #判断这个类型
+        if len(res_list) 
+        #first is type
+
+        level_keys = 
         pass
         #if len()
+        '''
 
+    res_list = []
+    for key,value in expobj.items():
+        keys = key.split('.')
+        res_list.append((keys,value))
 
-    return exp_obj
+    origin = from_child(res_list)
+    return origin
 
 '''
     #[(['s','t'],1),...]
@@ -153,9 +177,9 @@ if __name__ == '__main__':
         
 
     if args.expand:
-        func = expand_json
+        func = expand
     if args.contract:
-        func = contract_json
+        func = restore
     for line in fin:
         obj = json.loads(line)
         new = func(obj)
