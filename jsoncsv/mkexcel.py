@@ -3,84 +3,84 @@
 #author@shibin
 #2015.10.09
 
-import StringIO
 import xlwt
 import json
 import sys
 
 
-def filter_none(one_list):
-    for i in range(len(one_list)):
-        if one_list[i] == None:
-            one_list[i] = ""
-    return one_list
+def patch_none(row):
+    for i in range(len(row)):
+        if row[i] == None:
+            row[i] = ""
+    return row
 
 
-each_encode = lambda x: [i.encode('utf-8') for i in x]
+patch_encode = lambda row: [ele.encode('utf-8') for ele in row]
 
 
-def make_xls_file(header_list, data_list):
-    headers = each_encode(filter_none(header_list))
-    datas = [each_encode(filter_none(row)) for row in data_list]
+def patch_str(row):
+    for i in range(len(row)):
+        if type(row[i]) != unicode:
+            row[i] = str(row[i])
+    return row
 
-    mem_file = StringIO.StringIO()
+
+def patch_datas(datas):
+    datas = map(patch_none,datas)
+    datas = map(patch_str,datas)
+    datas = map(patch_encode,datas)
+
+    return datas
+
+
+def load_files(fin):
+    headers = set()
+    objs = []
+    for line in fin:
+        obj = json.loads(line)
+        for key in obj:
+            headers.add(key)
+        objs.append(obj)
+
+    headers = list(headers)
+    datas = []
+    for obj in objs:
+        row = []
+        for head in headers:
+            row.append(obj.get(head,''))
+        datas.append(row)
+
+    return (headers,datas)
+
+
+def make_xls(headers,datas):
     wb = xlwt.Workbook(encoding='utf-8', style_compression=0)
     ws = wb.add_sheet('Sheet1')
+
     r = 0
     c = 0
-    for header in headers:
-        ws.write(r, c, header)
+    for head in headers:
+        ws.write(r, c, head)
         c += 1
 
-    for data in datas:
+    for row in datas:
         r += 1
         c = 0
-        for datai in data:
-            ws.write(r, c, datai)
+        for ele in row:
+            ws.write(r, c, ele)
             c += 1
-    wb.save(mem_file)
-    mem_file.flush()
-    return mem_file
+
+    return wb
 
 
-def chg_doc(doc):
-    newdoc = {}
-    for k in doc:
-        newdoc[k] = doc[k]
+def main(fin,fout):
+    headers,datas = load_files(fin)
+    datas = patch_datas(datas)
+    wb = make_xls(headers,datas)
 
-    for k in newdoc:
-        v = newdoc[k]
-        if v == None:
-            newdoc[k] = ""
-        elif type(v) != unicode:
-            newdoc[k] = str(v)
-    return newdoc
+    wb.save(fout)
+    fout.flush()
 
-
-def readfile(fin):
-    header_list = []
-    data_list = []
-    for line in fin:
-        doc = json.loads(line)
-        doc = chg_doc(doc)
-        if header_list == []:
-            header_list = doc.keys()
-        data = []
-        for k in header_list:
-            data.append(doc[k])
-        data_list.append(data)
-    return header_list, data_list
-
-
-def writefile(mem_file, fout):
-    fout.write(mem_file.getvalue())
-    fout.close()
-
-
-def main(fin, fout):
-    header_list, data_list = readfile(fin)
-    mem_file = make_xls_file(header_list, data_list)
-    writefile(mem_file, fout)
 
 
 if __name__ == '__main__':
