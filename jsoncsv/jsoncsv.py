@@ -57,8 +57,8 @@ def restore(expobj):
         #the break
         #this group only one
         if N == 1:
+            #for last value
             if keys_list[0] == []:
-                #return the value
                 return values[0]
             #for single string obj
             elif keys_list[0][0] == '':
@@ -117,7 +117,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     if args.expand == args.restore:
-        print('can not choose two or choose none')
+        print('can not choose both or choose none, "－e" or "-r"')
         exit()
 
     if args.output != None:
