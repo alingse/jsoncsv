@@ -1,63 +1,61 @@
+#coding=utf-8
+#author@alingse
+#2016.08.09
 
 from __future__ import print_function
-
 from jsoncsv.jsoncsv import expand,restore
 
+import unittest
 import json
 
-def log(obj):
-    
-    print(json.dumps(obj,ensure_ascii=False,indent=1))
+class TestJsoncsv(unittest.TestCase):
+
+    def log(self,obj):
+        print(json.dumps(obj,ensure_ascii=False,indent=1))
+
+    def test_string(self):
+        s = "sss"
+        exp = expand(s)
+        _s = restore(exp)
+        self.assertEqual(s,_s)
+
+    def test_list(self):
+        s = ["sss","ttt",1,2,["3"]]
+        exp = expand(s)
+        _s = restore(exp)
+        print('test-list')
+        self.log(s)
+        self.log(exp)
+        self.log(_s)
+
+        self.assertListEqual(s,_s)
+
+    def test_dict(self):
+        s = {"s":1,"w":5,"t":{"m":0,"x":{"y":"z"}}}
+        exp = expand(s)
+        _s = restore(exp)
+        self.log(s)
+        self.log(exp)
+        self.log(_s)
+        self.assertDictEqual(s,_s)
+
+    def test_complex(self):
+        s = [{"s":0},{"t":["2",{"x":"z"}]},0,"w",["x","g",1]]
+        exp = expand(s)
+        _s = restore(exp)
+        self.log(s)
+        self.log(exp)
+        self.log(_s)
+        
+        self.assertDictEqual(s[0],_s[0])
+        self.assertDictEqual(s[1],_s[1])
+
+        self.assertEqual(s[2],_s[2])
+        self.assertEqual(s[3],_s[3])
+
+        self.assertListEqual(s[4],_s[4])
 
 
-def test_one(origin):
-    print('the origin:')
-    log(origin)
-
-    expobj = expand(origin)
-    print('the expobj:')
-    log(expobj)
-
-    _origin = restore(expobj)
-    print('the restore:')
-    log(_origin)
-
-    return _origin
-
-
-def test_string():
-    s = "sss"
-    print("test string :",s)
-    _s = test_one(s)
-    print('equal : ',_s==s)
-
-
-def test_list():
-    s = [1,2,3,4]
-    print('test list',s)
-    _s = test_one(s)
-    print('equal',_s == s)
-
-
-def test_dict():
-    s = {"s":1}
-    print('test dict',s)
-    _s = test_one(s)
-    print('Equal',_s.keys == ["s"] and _s["s"] == 1)
-
-def test_complex():
-    s = {"s":1,"t":[1,{"w":2}],"m":[{"w":[0,1,2]},{"m":"n"}]}
-    print('test a complex one ',s)
-    _s = test_one(s)
 
 if __name__ == '__main__':
-    test_string()
-    test_list()
-    test_dict()
-    test_complex()
-
-
-
-
-
-
+    unittest.main()
