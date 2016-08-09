@@ -1,9 +1,10 @@
 #!/usr/bin/python
 #coding=utf-8
-#author@shibin
+#author@alingse
 #2015.10.09
 
-import xlwt
+import argparse
+#import xlwt
 import json
 import sys
 
@@ -25,6 +26,7 @@ def patch_str(row):
     return row
 
 
+#patch
 def patch_datas(datas):
     datas = map(patch_none,datas)
     datas = map(patch_str,datas)
@@ -53,7 +55,18 @@ def load_files(fin):
     return (headers,datas)
 
 
-def make_xls(headers,datas):
+def dump_csv(headers,datas,fout):
+    fout.write(','.join(headers))
+    fout.write('\n')
+    for row in datas:
+        fout.write(','.join(row))
+        fout.write('\n')
+    fout.flush()
+    fout.close()
+
+
+def dump_xls(headers,datas,fout):
+    import xlwt
     wb = xlwt.Workbook(encoding='utf-8', style_compression=0)
     ws = wb.add_sheet('Sheet1')
 
@@ -69,26 +82,36 @@ def make_xls(headers,datas):
         for ele in row:
             ws.write(r, c, ele)
             c += 1
-
-    return wb
-
-
-def main(fin,fout):
-    headers,datas = load_files(fin)
-    datas = patch_datas(datas)
-    wb = make_xls(headers,datas)
-
     wb.save(fout)
     fout.flush()
 
 
+def main(fin,fout,dumpf):
+    headers,datas = load_files(fin)
+    datas = patch_datas(datas)
+    dumpf(headers,datas,fout)
+
 
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-t','--type',choices=['csv','xls'],default='csv',help='choose dump format')
+    parser.add_argument('input', nargs='?', help='input file, default is stdin')
+    parser.add_argument('output', nargs='?', help='output file, default is stdout')
+    args = parser.parse_args()
+
+    #default dump
+    dumpf = dump_csv
+    if args.type == 'xls':
+        import xlwt
+        dumpf = dump_xls
+
+    #default
     fin = sys.stdin
     fout = sys.stdout
-    if len(sys.argv) == 2:
-        fin = open(sys.argv[1], 'r')
-    if len(sys.argv) == 3:
-        fin = open(sys.argv[1], 'r')
-        fout = open(sys.argv[2], 'w')
-    main(fin, fout)
+    if args.input != None:
+        fin = open(args.input, 'r')
+    if args.output != None:
+        fout = open(args.output, 'w')
+
+    main(fin,fout,dumpf)
+    
