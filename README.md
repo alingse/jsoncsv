@@ -14,7 +14,8 @@ echo '{"s":[1,2,{"w":1}]}'|./jsoncsv/jsoncsv.py -e |jq -r ''
 **制作xlsx** 
 
 ```
-cat raw.json|./jsoncsv.py -e |./mkexcel.py > test.xls
+cat raw.json|./jsoncsv.py -e |./mkexcel.py > test.csv
+cat raw.json|./jsoncsv.py -e |./mkexcel.py -t xls > test.xls
 ```
 
 
@@ -22,7 +23,7 @@ cat raw.json|./jsoncsv.py -e |./mkexcel.py > test.xls
 ## 来源说明
 因为做爬虫时，经常数据是json 格式的，而很多**客户需要看excel 的，需要耗费人力去填表格。
 
-这两个文件可以连用，可以从原始json（可以用 `jq` 先做一些处理）到xlsx一步完成。
+这两个文件可以连用，可以从原始json（可以用 `jq` 先做一些处理）到csv/xlsx一步完成。
 
 最后再根据具体含义，更改xlsx文件的标题，使有明确含义
 
@@ -83,9 +84,9 @@ echo '{"s":[1,2,{"w":1}]}'|./jsoncsv/jsoncsv.py -e|./jsoncsv/jsoncsv.py -r
 
 
 如上，将各种类型的json数据转化层单层的 
-####  一点要求
-1. 原始json 的 各级key不能包含"."
-2. 不能混杂数字。如果全部的key都是数字，恢复重构时会被当成list类型。
+####  此版本要求
+1. 原始json 的 各级key不能包含"."，因为`.`是expand后key的连接字符。
+2. 字典key中不能混杂数字。如果全部的key都是数字，恢复重构时会被当成list类型。
 
 例如
 
@@ -100,26 +101,37 @@ echo '{"0":1,"2":[1,2]}'|./jsoncsv/jsoncsv.py -e|./jsoncsv/jsoncsv.py -r
 
 
 ## 格式转换
+使用 mkexcel.py 文件，接受一个层次的json文件
+
+即可以使用上面`jsoncsv.py`展开的的json，dump为需要的格式（csv/xls）
+
+`cat raw.json|./jsoncsv.py -e |./mkexcel.py -t xls > test.xls`
+
+其中 `./jsoncsv.py -e` 中 `-e`参数就是展开为一层数据，mkexcle 读取数据即可得到指定的格式
 
 ### csv
-
-  略，以后补充
-
+`csv` 是默认格式
+```
+cat expand.json|./mkexcel.py > test.csv
+cat expand.json|./mkexcel.py -t csv > test.csv
+./mkexcel.py expand.json text.csv
+./mkexcel.py expand.json > text.csv
+```
+  
 ### xlsx
 
- mkexcel.py 
- 
- 读取只有一个层次的json数据，得到xls文件，使用举例
- 
+使用`-t xls`或`--type xls`，声明dump 为 xls 格式
+
  ```
- cat raw.json|./jsoncsv.py -e |./mkexcel.py > test.xls
+cat expand.json|./mkexcel.py -t xls > test.xls
+./mkexcel.py -t xls expand.json text.csv
+./mkexcel.py -t xls  expand.json > text.csv
  ```
- 
- 其中 `./jsoncsv.py -e` 中 `-e`参数就是展开为一层数据，mkexcle 读取数据即可得到xls
- 
+
+
+## 实践
+ (**旧版本下的，应该需要相应调整**)
  具体数据样例参考某次[爬虫外包](https://github.com/alingse/crawler/tree/master/projects/sfda.gov)的数据处理过程
- 
- 
  
 ## 测试
 
@@ -128,14 +140,13 @@ echo '{"0":1,"2":[1,2]}'|./jsoncsv/jsoncsv.py -e|./jsoncsv/jsoncsv.py -r
 
 ```python -m test.test```
 
-
 ## TODO
 
 以下按顺序来做，
 
 1. 增加unittest ，
 2. 更多的出错检查
-3. 把文件读写从jsoncsv 中分离出来看
-4. mkexcel 重构
+3. <s>把文件读写从jsoncsv 中分离出来看</s>暂时没必要
+4. <s>mkexcel 重构</s> 完成
 5. 构建包
   
