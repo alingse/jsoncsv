@@ -1,8 +1,8 @@
 # jsoncsv
 将多层次的json转为一层次的json，再转成csv或者xlsx
- 
+
 **展开为1层json**
- 
+
 ```
 echo '{"s":[1,2,{"w":1}]}'|./jsoncsv/jsoncsv.py -e |jq -r ''
 {
@@ -12,11 +12,11 @@ echo '{"s":[1,2,{"w":1}]}'|./jsoncsv/jsoncsv.py -e |jq -r ''
 }
 ```
 **制作xlsx** 
-  
+
 ```
 cat raw.json|./jsoncsv.py -e |./mkexcel.py > test.xls
 ```
- 
+
 
 
 ## 来源说明
@@ -62,7 +62,8 @@ echo '[1,2,3,4]'|./jsoncsv/jsoncsv.py -e
 echo '[1,2,3,4]'|./jsoncsv/jsoncsv.py -e|./jsoncsv/jsoncsv.py -r
 [1, 2, 3, 4]
 
-echo '1'|./jsoncsv/jsoncsv.py -e                                    
+echo '1'|./jsoncsv/jsoncsv.py -e
+
 {"": 1}
 echo '1'|./jsoncsv/jsoncsv.py -e|./jsoncsv/jsoncsv.py -r
 1
@@ -72,7 +73,8 @@ echo '"sss"'|./jsoncsv/jsoncsv.py -e
 echo '"sss"'|./jsoncsv/jsoncsv.py -e|./jsoncsv/jsoncsv.py -r
 "sss"
 
-echo '{"s":[1,2,{"w":1}]}'|./jsoncsv/jsoncsv.py -e                      
+echo '{"s":[1,2,{"w":1}]}'|./jsoncsv/jsoncsv.py -e
+
 {"s.2.w": 1, "s.0": 1, "s.1": 2}
 echo '{"s":[1,2,{"w":1}]}'|./jsoncsv/jsoncsv.py -e|./jsoncsv/jsoncsv.py -r
 {"s": [1, 2, {"w": 1}]}

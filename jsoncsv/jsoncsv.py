@@ -5,8 +5,8 @@
 
 from itertools import groupby
 from operator import itemgetter
-import json
 import argparse
+import json
 import sys
 
 
@@ -111,7 +111,7 @@ def restore(expobj):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('-e','--expand',action='store_true',help='choose `expand` a json')
-    parser.add_argument('-r','--restore',action='store_true',help='choose `contract` a ｀expanded` json')    
+    parser.add_argument('-r','--restore',action='store_true',help='choose `contract` a ｀expanded` json')
     parser.add_argument('-o','--output',help='file for output, default is stdout')
     parser.add_argument('input', nargs='?', help='input file, default is stdin')
     args = parser.parse_args()
