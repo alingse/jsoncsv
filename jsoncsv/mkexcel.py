@@ -28,9 +28,9 @@ def patch_str(row):
 
 #patch
 def patch_datas(datas):
-    datas = map(patch_none,datas)
-    datas = map(patch_str,datas)
-    datas = map(patch_encode,datas)
+    datas = map(patch_none, datas)
+    datas = map(patch_str, datas)
+    datas = map(patch_encode, datas)
 
     return datas
 
@@ -49,13 +49,13 @@ def load_files(fin):
     for obj in objs:
         row = []
         for head in headers:
-            row.append(obj.get(head,''))
+            row.append(obj.get(head, ''))
         datas.append(row)
 
-    return (headers,datas)
+    return (headers, datas)
 
 
-def dump_csv(headers,datas,fout):
+def dump_csv(headers, datas, fout):
     fout.write(','.join(headers))
     fout.write('\n')
     for row in datas:
@@ -65,7 +65,7 @@ def dump_csv(headers,datas,fout):
     fout.close()
 
 
-def dump_xls(headers,datas,fout):
+def dump_xls(headers, datas, fout):
     import xlwt
     wb = xlwt.Workbook(encoding='utf-8', style_compression=0)
     ws = wb.add_sheet('Sheet1')
@@ -86,17 +86,25 @@ def dump_xls(headers,datas,fout):
     fout.flush()
 
 
-def main(fin,fout,dumpf):
-    headers,datas = load_files(fin)
+def main(fin, fout, dumpf):
+    headers, datas = load_files(fin)
     datas = patch_datas(datas)
-    dumpf(headers,datas,fout)
+    dumpf(headers, datas, fout)
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('-t','--type',choices=['csv','xls'],default='csv',help='choose dump format')
-    parser.add_argument('input', nargs='?', help='input file, default is stdin')
-    parser.add_argument('output', nargs='?', help='output file, default is stdout')
+    parser.add_argument('-t',
+                        '--type',
+                        choices=['csv', 'xls'],
+                        default='csv',
+                        help='choose dump format')
+    parser.add_argument('input',
+                        nargs='?',
+                        help='input file, default is stdin')
+    parser.add_argument('output',
+                        nargs='?',
+                        help='output file, default is stdout')
     args = parser.parse_args()
 
     #default dump
@@ -113,5 +121,4 @@ if __name__ == '__main__':
     if args.output != None:
         fout = open(args.output, 'w')
 
-    main(fin,fout,dumpf)
-    
+    main(fin, fout, dumpf)
