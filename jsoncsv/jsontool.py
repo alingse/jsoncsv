@@ -49,17 +49,15 @@ def restore(expobj,separator='.'):
     def from_child(res_list):
         keys_list, values = zip(*res_list)
 
-        count = len(keys_list)
         #the break
-        #the leaf point
-        if count == 1:
+        if len(keys_list) == 1:
+            #the leaf point
             #for last value
             if keys_list[0] == []:
                 return values[0]
             #for single string obj
             elif keys_list[0][0] == '':
                 return values[0]
-            #else this is object or array
 
         key_list = [keys.pop(0) for keys in keys_list]
 
@@ -67,17 +65,17 @@ def restore(expobj,separator='.'):
         sort_zlist = sorted(zlist, key=itemgetter(0))
         glist = groupby(sort_zlist, itemgetter(0))
 
-        #check for digit
-        key_isdigit = map(lambda key:key.isdigit(),key_list)
+        _isdigit = map(lambda key:key.isdigit(),key_list)
         #this is an array
-        if all(key_isdigit):
+        if all(_isdigit):
             _type = list
             items = []
         #this is an object
-        elif not any(key_isdigit):
+        else:
+        #elif not any(_isdigit):
             _type = dict
             doc = {}
-        
+
         for g in glist:
             key, _zlist = g
             #机智,我真是太机智了
