@@ -71,12 +71,12 @@ def restore(expobj,separator='.'):
         key_isdigit = map(lambda key:key.isdigit(),key_list)
         #this is an array
         if all(key_isdigit):
-            doc = []
+            _type = list
+            items = []
         #this is an object
         elif not any(key_isdigit):
+            _type = dict
             doc = {}
-        else:
-            raise Exception('number can not be a key')
         
         for g in glist:
             key, _zlist = g
@@ -84,16 +84,15 @@ def restore(expobj,separator='.'):
             _res_list = map(itemgetter(1, 2), _zlist)
             _doc = from_child(_res_list)
 
-            if type(doc) == list:
-                doc.append((int(key), _doc))
-            elif type(doc) == dict:
+            if _type == list:
+                items.append((int(key), _doc))
+            elif _type == dict:
                 doc[key] = _doc
 
-        if type(doc) == list:
+        if _type == list:
             #sort by index(the key)
-            sort_doc = sorted(doc, key=itemgetter(0))
-            #get list doc
-            doc = map(itemgetter(1), sort_doc)
+            sort_items = sorted(items, key=itemgetter(0))
+            doc = map(itemgetter(1), sort_items)
 
         return doc
 
