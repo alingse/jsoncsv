@@ -3,7 +3,7 @@
 #2016.08.09
 
 from __future__ import print_function
-from jsoncsv.jsoncsv import expand,restore
+from jsoncsv import expand,restore
 
 import unittest
 import json
@@ -54,8 +54,6 @@ class TestJsoncsv(unittest.TestCase):
         self.assertEqual(s[3],_s[3])
 
         self.assertListEqual(s[4],_s[4])
-
-
 
 if __name__ == '__main__':
     unittest.main()
