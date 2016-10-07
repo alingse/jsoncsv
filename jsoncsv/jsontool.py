@@ -11,11 +11,10 @@ import sys
 
 
 def expand(origin,separator='.'):
-    #gen net obj keys
     def gen_child(obj, head=None):
         exp = {}
-
         _type = type(obj)
+        #the break
         if _type not in [dict,list]:
             key = head
             value = obj
@@ -49,39 +48,42 @@ def expand(origin,separator='.'):
 def restore(expobj,separator='.'):
     def from_child(res_list):
         keys_list, values = zip(*res_list)
-        N = len(keys_list)
+
+        count = len(keys_list)
         #the break
-        #this group only one
-        if N == 1:
+        #the leaf point
+        if count == 1:
             #for last value
             if keys_list[0] == []:
                 return values[0]
             #for single string obj
             elif keys_list[0][0] == '':
                 return values[0]
+            #else this is object or array
 
         key_list = [keys.pop(0) for keys in keys_list]
-        #应该还有其他的检查 assert 等。raise Exception
 
         zlist = zip(key_list, keys_list, values)
         sort_zlist = sorted(zlist, key=itemgetter(0))
         glist = groupby(sort_zlist, itemgetter(0))
 
         #check for digit
-        digit_list = filter(lambda x: x.isdigit(), key_list)
+        key_isdigit = map(lambda key:key.isdigit(),key_list)
         #this is an array
-        if len(digit_list) == N:
+        if all(key_isdigit):
             doc = []
-        elif len(digit_list) == 0:
+        #this is an object
+        elif not any(key_isdigit):
             doc = {}
         else:
             raise Exception('number can not be a key')
-
+        
         for g in glist:
             key, _zlist = g
             #机智,我真是太机智了
             _res_list = map(itemgetter(1, 2), _zlist)
             _doc = from_child(_res_list)
+
             if type(doc) == list:
                 doc.append((int(key), _doc))
             elif type(doc) == dict:
@@ -89,9 +91,9 @@ def restore(expobj,separator='.'):
 
         if type(doc) == list:
             #sort by index(the key)
-            sort_tmp = sorted(doc, key=itemgetter(0))
+            sort_doc = sorted(doc, key=itemgetter(0))
             #get list doc
-            doc = map(itemgetter(1), sort_tmp)
+            doc = map(itemgetter(1), sort_doc)
 
         return doc
 
