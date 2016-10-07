@@ -14,30 +14,32 @@ def expand(origin,separator='.'):
     #gen net obj keys
     def gen_child(obj, head=None):
         exp = {}
-        if type(obj) == dict:
-            for key,_obj in obj.items():                
+
+        _type = type(obj)
+        if _type not in [dict,list]:
+            if head == None:
+                key = ''
+            else:
+                key = head
+            value = obj
+            _exp = {key:value}
+
+            exp.update(_exp)
+        else:
+            if _type == dict:
+                items = iter(obj.items())
+            if _type == list:
+                items = enumerate(obj)
+
+            for key,value in items:
                 if head == None:
-                    _head = key
+                    _head = '{}'.format(key)
                 else:
                     _head = '{}{}{}'.format(head, separator, key)
 
-                _exp = gen_child(_obj, head=_head)
+                _exp = gen_child(value, head = _head)
                 exp.update(_exp)
-        elif type(obj) == list:
-            for i, _obj in enumerate(obj):
-                if head == None:
-                    _head = '{}'.format(i)
-                else:
-                    _head = '{}{}{}'.format(head, separator, i)
 
-                _exp = gen_child(_obj, head=_head)
-                exp.update(_exp)
-        else:
-            if head == None:
-                head = ''
-
-            _exp = {head: obj}
-            exp.update(_exp)
         return exp
 
     expobj = gen_child(origin)
