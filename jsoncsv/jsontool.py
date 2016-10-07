@@ -17,14 +17,14 @@ def expand(origin,separator='.'):
 
         _type = type(obj)
         if _type not in [dict,list]:
+            key = head
+            value = obj
             if head == None:
                 key = ''
-            else:
-                key = head
-            value = obj
-            _exp = {key:value}
 
+            _exp = {key:value}
             exp.update(_exp)
+
         else:
             if _type == dict:
                 items = iter(obj.items())
