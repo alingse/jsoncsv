@@ -10,46 +10,41 @@ import json
 import sys
 
 
-def expand(origin):
+def expand(origin,separator='.'):
     #gen net obj keys
-    def gen_next(obj, head=None):
+    def gen_child(obj, head=None):
         exp = {}
         if type(obj) == dict:
-            for key in obj:
+            for key,_obj in obj.items():                
                 if head == None:
-                    k_head = key
+                    _head = key
                 else:
-                    k_head = '{}.{}'.format(head, key)
+                    _head = '{}{}{}'.format(head, separator, key)
 
-                k_obj = obj[key]
-                k_exp = gen_next(k_obj, head=k_head)
-                exp.update(k_exp)
+                _exp = gen_child(_obj, head=_head)
+                exp.update(_exp)
         elif type(obj) == list:
-            for i, i_obj in enumerate(obj):
+            for i, _obj in enumerate(obj):
                 if head == None:
-                    #this is important,so the json forbidden number key
-                    i_head = str(i)
+                    _head = '{}'.format(i)
                 else:
-                    i_head = '{}.{}'.format(head, i)
+                    _head = '{}{}{}'.format(head, separator, i)
 
-                i_exp = gen_next(i_obj, head=i_head)
-                exp.update(i_exp)
+                _exp = gen_child(_obj, head=_head)
+                exp.update(_exp)
         else:
             if head == None:
                 head = ''
 
-            value = obj
-            _exp = {head: value}
-
+            _exp = {head: obj}
             exp.update(_exp)
-
         return exp
 
-    expobj = gen_next(origin, head=None)
+    expobj = gen_child(origin)
     return expobj
 
 
-def restore(expobj):
+def restore(expobj,separator='.'):
     def from_child(res_list):
         keys_list, values = zip(*res_list)
         N = len(keys_list)
@@ -100,7 +95,7 @@ def restore(expobj):
 
     res_list = []
     for key, value in expobj.items():
-        keys = key.split('.')
+        keys = key.split(separator)
         res_list.append((keys, value))
 
     origin = from_child(res_list)
