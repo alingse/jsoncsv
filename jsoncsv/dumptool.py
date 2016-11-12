@@ -1,22 +1,21 @@
-#!/usr/bin/python
-#coding=utf-8
-#author@alingse
-#2015.10.09
+# coding=utf-8
+# author@alingse
+# 2015.10.09
 
-import argparse
-#import xlwt
 import json
-import sys
+import xlwt
 
 
 def patch_none(row):
     for i in range(len(row)):
-        if row[i] == None:
+        if row[i] is None:
             row[i] = ""
     return row
 
 
-patch_encode = lambda row: [ele.encode('utf-8') for ele in row]
+def patch_encode(row):
+
+    return [ele.encode('utf-8') for ele in row]
 
 
 def patch_str(row):
@@ -26,7 +25,6 @@ def patch_str(row):
     return row
 
 
-#patch
 def patch_datas(datas):
     datas = map(patch_none, datas)
     datas = map(patch_str, datas)
@@ -66,7 +64,6 @@ def dump_csv(headers, datas, fout):
 
 
 def dump_xls(headers, datas, fout):
-    import xlwt
     wb = xlwt.Workbook(encoding='utf-8', style_compression=0)
     ws = wb.add_sheet('Sheet1')
 
@@ -86,39 +83,7 @@ def dump_xls(headers, datas, fout):
     fout.flush()
 
 
-def main(fin, fout, dumpf):
+def dumpfile(fin, fout, dumpf):
     headers, datas = load_files(fin)
     datas = patch_datas(datas)
     dumpf(headers, datas, fout)
-
-
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
-    parser.add_argument('-t',
-                        '--type',
-                        choices=['csv', 'xls'],
-                        default='csv',
-                        help='choose dump format')
-    parser.add_argument('input',
-                        nargs='?',
-                        help='input file, default is stdin')
-    parser.add_argument('output',
-                        nargs='?',
-                        help='output file, default is stdout')
-    args = parser.parse_args()
-
-    #default dump
-    dumpf = dump_csv
-    if args.type == 'xls':
-        import xlwt
-        dumpf = dump_xls
-
-    #default
-    fin = sys.stdin
-    fout = sys.stdout
-    if args.input != None:
-        fin = open(args.input, 'r')
-    if args.output != None:
-        fout = open(args.output, 'w')
-
-    main(fin, fout, dumpf)
