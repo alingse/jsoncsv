@@ -1,10 +1,10 @@
 # jsoncsv 
 
-将多层次的json转为一层次的json，再转成csv或者xlsx 的工具
+a tool convert json file to csv or xlsx
 
-```
+```bash
 cat raw.json|jsoncsv|mkexcel > output.csv
-cat raw.json|jsoncsv|mkexcel -t xls > output. xls
+cat raw.json|jsoncsv|mkexcel -t xls > output.xls
 ```
 
 
@@ -17,26 +17,30 @@ echo '{"s":[1,2,{"w":1}]}'|jsoncsv
 
 ### -e -r
 
-`-e`,`--expand` expand 展开 json 数据
+`-e`,`--expand` expand, 展开 json
 
-```
+```bash
 jsoncsv -e raw.json
 {"s":[1,2,{"w":1}]} ----> {"s.2.w": 1,"s.0": 1,"s.1": 2}
 ```
 `-r`,`--restore` restore 重构被展开的json
 
-```
+```bash
 jsoncsv -r expand.json
 {"s.2.w": 1,"s.0": 1,"s.1": 2} ----> {"s": [1, 2, {"w": 1}]}
 ```
 
 ### -s
 
- `-s`,`--separator`  default is `.`
+ `-s`,`--separator` default separator is `.`
 
 ## 2.mkexcel
 
-```
+dump expanded (by `jsoncsv`) json file to `csv` or `xls`
+
+将`jsoncsv` expand 的 json文件转成 csv/xls
+
+```bash
 cat expand.json|mkexcel -o output.csv
 cat expnad.json|mkexcel -t xls > output.xls
 ```
@@ -44,7 +48,7 @@ cat expnad.json|mkexcel -t xls > output.xls
 
 ### -t -o
 
-`-t`,`--type` dump type `['csv', 'xls']`
+`-t`,`--type` dump type in `['csv', 'xls']`
 
 ```
 cat expand.json|mkexcel -t csv > output.csv
@@ -58,9 +62,11 @@ cat expand.json|mkexcel -t xls > output.xls
 
 1. 原始json 的 各级key不能包含"."，因为`.`是expand后key的连接字符。
   
-  key can't contains separator `.` 
+  key can't contains separator (default is `.` )
   
-  下个版本会考虑这个问题
+  下个版本会考虑这个问题,可能会使用转义 
+  
+  (`s.w.www.xxx.com` -->`s\.w\.www.xxx.com`)
   
 2. 字典key中不能混杂数字。如果全部的key都是数字，恢复重构时会被当成list类型。
 
@@ -70,6 +76,11 @@ cat expand.json|mkexcel -t xls > output.xls
 	echo '{"0":1,"2":[1,2]}'|jsoncsv -e| jsoncsv -r
 	[1, [1, 2]]
 	```
+	
+	过于复杂，不想考虑在expand的json中添加类型信息
+
+3. xlsx 目前写入都是 `str`
+
 
 ## TODO
 
@@ -77,11 +88,10 @@ cat expand.json|mkexcel -t xls > output.xls
 
 1. <s>增加unittest</s> 完成，
 2. 更多的出错检查
-3. <s>把文件读写从jsoncsv 中分离出来看</s>
+3. <s>把文件读写从jsontool 中分离出来看</s> 完成
 4. <s>mkexcel 重构</s> 完成
 5. <s>构建包</s> 完成
 6. 支持 separator 的转义
 7. mkexcel 的效率
 8. mkexcel csv xls dump 的 重构
 9. dumptool.dump_xls 对 int 日期等支持
-  
