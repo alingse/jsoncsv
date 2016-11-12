@@ -8,11 +8,9 @@ from jsoncsv import __version__
 
 version = '.'.join(map(str, __version__))
 
-with open('README.md') as f:
-    readme = f.read()
-
-with open('LICENSE') as f:
-    license = f.read()
+# with open('README.md') as f:
+#    readme = f.read()
+readme = 'Documents: https://github.com/alingse/jsoncsv'
 
 setup(
     name='jsoncsv',
@@ -21,7 +19,8 @@ setup(
     long_description=readme,
     author='alingse',
     author_email='alingse@foxmail.com',
-    license=license,
+    url='https://github.com/alingse/jsoncsv',
+    license='Apache 2.0',
     packages=find_packages(exclude=('tests')),
     install_requires=[
         'xlwt',
