@@ -105,7 +105,8 @@ NOTE
 原始json 的 各级key不能包含分隔符 "."，因为`.`是expand后key的连接字符。
 下个版本会考虑这个问题,可能会使用转义
 
-s.w.www.xxx.com -->s\.w\.www.xxx.com
+
+s.w.www.xxx.com -->s\\.w\\.www.xxx.com
 
 2. key can't be all intenger string
 -----------------------------------
