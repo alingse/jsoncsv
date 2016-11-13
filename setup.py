@@ -8,9 +8,8 @@ from jsoncsv import __version__
 
 version = '.'.join(map(str, __version__))
 
-# with open('README.md') as f:
-#    readme = f.read()
-readme = 'Documents: https://github.com/alingse/jsoncsv'
+with open('README.rst') as f:
+    readme = f.read()
 
 setup(
     name='jsoncsv',

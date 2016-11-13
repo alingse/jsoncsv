@@ -2,4 +2,4 @@
 # author@alingse
 # 2016.09.30
 
-__version__ = (2, 0, 1)
+__version__ = (2, 0, 2)
