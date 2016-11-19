@@ -3,40 +3,46 @@
 # 2016.05.27
 
 from itertools import groupby
+from collections import Iterable
 from operator import itemgetter
+from copy import deepcopy
 
+
+def gen_leaf(root, path=None):
+    if path == None:
+        path = []
+
+    # the leaf
+    if not isinstance(root, Iterable):
+        leaf = (path, root)
+        yield leaf
+    else:
+        if type(root) == dict:
+            items = root.iteritems()
+        else:
+            items = enumerate(root)
+        
+        for key, value in items:
+            _path = deepcopy(path)
+            _path.append(key)
+            for leaf in gen_leaf(value, _path):
+                yield leaf
+
+
+def from_leaf(leafs):    
+    pass
 
 def expand(origin, separator='.'):
-    def gen_child(obj, head=None):
-        exp = {}
-        _type = type(obj)
-        # the break
-        if _type not in (dict, list):
-            key = head
-            value = obj
-            if head is None:
-                key = ''
 
-            _exp = {key: value}
-            exp.update(_exp)
-        else:
-            if _type == dict:
-                items = iter(obj.items())
-            if _type == list:
-                items = enumerate(obj)
+    root = origin
+    leafs = gen_leaf(root)
 
-            for key, value in items:
-                if head is None:
-                    _head = '{}'.format(key)
-                else:
-                    _head = '{}{}{}'.format(head, separator, key)
+    expobj = {}
+    for path, value in leafs:
+        path = map(str, path)
+        key = separator.join(path)
+        expobj[key] = value
 
-                _exp = gen_child(value, head=_head)
-                exp.update(_exp)
-
-        return exp
-
-    expobj = gen_child(origin)
     return expobj
 
 
