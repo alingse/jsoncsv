@@ -11,12 +11,13 @@ __all__ = [
     'restore',
 ]
 
+
 def gen_leaf(root, path=None):
     if path is None:
         path = []
 
     # the leaf
-    if not isinstance(root, (dict,list)) or not root:
+    if not isinstance(root, (dict, list)) or not root:
         leaf = (path, root)
         yield leaf
     else:
@@ -24,12 +25,16 @@ def gen_leaf(root, path=None):
             items = root.iteritems()
         else:
             items = enumerate(root)
-        
+
         for key, value in items:
             _path = deepcopy(path)
             _path.append(key)
             for leaf in gen_leaf(value, _path):
                 yield leaf
+
+
+int_digit = lambda x: isinstance(x, int)
+str_digit = lambda x: x.isdigit()
 
 
 def from_leaf(leafs):
@@ -52,9 +57,6 @@ def from_leaf(leafs):
         _leafs = map(itemgetter(1), _zlist)
         _child = from_leaf(_leafs)
         child.append((head, _child))
-
-    int_digit = lambda x: isinstance(x, int)
-    str_digit = lambda x: x.isdigit()
 
     if all(map(int_digit, heads)) or all(map(str_digit, heads)):
         child.sort(key=lambda x: int(x[0]))
