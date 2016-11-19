@@ -53,8 +53,10 @@ def from_leaf(leafs):
         _child = from_leaf(_leafs)
         child.append((head, _child))
 
-    is_digit = lambda x: isinstance(x, int)
-    if all(map(is_digit, heads)) or all(map(str.isdigit, heads)):
+    int_digit = lambda x: isinstance(x, int)
+    str_digit = lambda x: x.isdigit()
+
+    if all(map(int_digit, heads)) or all(map(str_digit, heads)):
         child.sort(key=lambda x: int(x[0]))
         return map(itemgetter(1), child)
     else:
