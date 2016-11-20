@@ -85,7 +85,7 @@ def jsoncsv():
     if args.input is not None:
         fin = open(args.input, 'r')
     if args.output is not None:
-        fout = open(args.output, 'w')        
+        fout = open(args.output, 'w')
 
     safe = args.safe
     separator = args.separator
@@ -101,7 +101,7 @@ def jsoncsv():
 def mkexcel():
     parser = load_mkexcel_parse()
     args = parser.parse_args()
-    
+
     dumpf = dump_csv
 
     if args.type == 'csv':
@@ -117,6 +117,5 @@ def mkexcel():
 
     if args.output is not None:
         fout = open(args.output, 'w')
-        
 
     dumpfile(fin, fout, dumpf)
