@@ -13,12 +13,20 @@ command line example :
 
 .. code-block:: bash
 
-    $cat raw.json|jsoncsv|mkexcel > output.csv
-    $cat raw.json|jsoncsv|mkexcel -t xls > output.xls
-    $jsoncsv raw.json expand.json
-    $mkexcel expand.json -o output.csv
-    $mkexcel expand.json -t xls -o output.csv
+    cat raw.json|jsoncsv|mkexcel > output.csv
+    cat raw.json|jsoncsv|mkexcel -t xls > output.xls
 
+    jsoncsv raw.json expand.json
+
+    mkexcel expand.json -o output.csv
+    mkexcel expand.json -t xls -o output.csv
+
+    cat expand.json|jsoncsv -r > raw.json
+
+    cat raw.json|jsoncsv --safe|mkexcel > output.csv
+
+
+    jsoncsv --help
 
 
 
@@ -29,11 +37,11 @@ example：
 
 .. code-block:: bash
 
-    $echo '{"s":[1,2,{"w":1}]}'|jsoncsv
+    echo '{"s":[1,2,{"w":1}]}'|jsoncsv
     {"s.2.w": 1,"s.0": 1,"s.1": 2}
 
 
--e,--expand
+-e, --expand
 -------------
 
 expand json, 展开 json
@@ -70,6 +78,18 @@ separator used for combine the keys in the tree
 
 default separator is **.**
 
+--safe
+---------
+on safe mode, use escape separator to avoid confilct
+
+expand:
+
+['aa', 'bb', 'www.xxx.com'] --> 'aa\.bb\.www.xxx.com'
+
+restore:
+
+'aa\.bb\.www.xxx.com' --> ['aa', 'bb', 'www.xxx.com']
+
 
 mkexcel
 >>>>>>>>>>>
@@ -96,34 +116,25 @@ chose dump type in ['csv', 'xls']
     cat expand.json|mkexcel -t xls > output.xls
 
 
-NOTE
+NOTE/TODO
 >>>>>>>>>
 
-1. key in origin json can't contain separator
----------------------------------------------
-
-原始json 的 各级key不能包含分隔符 "."，因为`.`是expand后key的连接字符。
-下个版本会考虑这个问题,可能会使用转义
-
-
-s.w.www.xxx.com -->s\\.w\\.www.xxx.com
-
-2. key can't be all intenger string
+1. key can't be all intenger string
 -----------------------------------
 
-字典key中不能混杂数字。如果全部的key都是数字，恢复重构时会被当成list类型。
 
 example:
 
 .. code-block:: bash
 
-	  echo '{"0":1,"1":[1,2]}'|jsoncsv -e| jsoncsv -r
-	  [1, [1, 2]]
-
-实现方案会过于复杂，不想考虑在expand的json中添加类型信息
+	echo '{"0":1,"1":[1,2]}'|jsoncsv -e| jsoncsv -r
+	[1, [1, 2]]
 
 
-3. write in xlsx is always `str`
+如果要考虑，实现方案会过于复杂，不想考虑在expand的json中添加类型信息
+
+
+2. write in xlsx is always `str`
 ----------------------------------
 
-下个版本会考虑
+wait next version

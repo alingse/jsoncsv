@@ -85,7 +85,7 @@ def expand(origin, separator='.', safe=False):
     return expobj
 
 
-def restore(expobj, separator='.' ,safe=False):
+def restore(expobj, separator='.', safe=False):
     leafs = []
 
     for key, value in expobj.iteritems():
