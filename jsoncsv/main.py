@@ -12,10 +12,21 @@ from jsoncsv.dumptool import dump_csv, dump_xls, dumpfile
 
 def load_jsontool_parse():
     parser = argparse.ArgumentParser()
+
+    def separator_type(string):
+        if len(string) > 1:
+            msg = 'separator can only be a char'
+            raise argparse.ArgumentTypeError(msg)
+        if string == '\\':
+            msg = 'separator can not be `\\` '
+            raise argparse.ArgumentTypeError(msg)
+        return string
+
     parser.add_argument('-s',
                         '--separator',
                         action='store',
                         help='the separator for join keys',
+                        type=separator_type,
                         default='.')
     parser.add_argument('--safe',
                         action='store_true',
@@ -61,26 +72,22 @@ def jsoncsv():
     if args.expand and args.restore:
         print('can not choose both, default is `-e`', file=sys.stderr)
         exit()
+    elif args.expand:
+        func = expand
+    elif args.restore:
+        func = restore
     else:
         func = expand
+
+    fin = sys.stdin
+    fout = sys.stdout
 
     if args.input is not None:
         fin = open(args.input, 'r')
-    else:
-        fin = sys.stdin
-
     if args.output is not None:
-        fout = open(args.output, 'w')
-    else:
-        fout = sys.stdout
-
-    if args.expand:
-        func = expand
-    if args.restore:
-        func = restore
+        fout = open(args.output, 'w')        
 
     safe = args.safe
-
     separator = args.separator
 
     for line in fin:
@@ -94,24 +101,22 @@ def jsoncsv():
 def mkexcel():
     parser = load_mkexcel_parse()
     args = parser.parse_args()
+    
+    dumpf = dump_csv
 
     if args.type == 'csv':
         dumpf = dump_csv
-    elif args.type == 'xls':
+    if args.type == 'xls':
         dumpf = dump_xls
-    else:
-        # can't reach here
-        print('can not reach here', file=sys.stderr)
-        exit()
+
+    fin = sys.stdin
+    fout = sys.stdout
 
     if args.input is not None:
         fin = open(args.input, 'r')
-    else:
-        fin = sys.stdin
 
     if args.output is not None:
         fout = open(args.output, 'w')
-    else:
-        fout = sys.stdout
+        
 
     dumpfile(fin, fout, dumpf)
