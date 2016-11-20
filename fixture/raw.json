@@ -1,4 +1,4 @@
 {"title":"AAAA","detail":{"when":2016,"what":"eat","where":"beijing","who":["one","two","three"]}}
-{"title":"BBBB","detail":{"when":2016,"what":"play","where":"湖北","who":["one","two","three"],"how":"online"}}
+{"title":"BBBB","detail":{"when":2016,"what":"play","where":"湖北","who":["one","two","three"],"how":"offline"}}
 {"title":"CCCC","detail":{"when":2015,"where":"chengdu","who":["two","three"]}}
-{"title":"DDDD","detail":{"when":2015,"what":"happy","how":"online","www.AAA.com":true}}
+{"title":"DDDD","detail":{"when":2015,"what":"happy","how":"online"}}
