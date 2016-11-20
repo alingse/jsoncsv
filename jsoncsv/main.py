@@ -17,6 +17,9 @@ def load_jsontool_parse():
                         action='store',
                         help='the separator for join keys',
                         default='.')
+    parser.add_argument('--safe',
+                        action='store_true',
+                        help='use safe mode. key1.key2 --> key1\\.key2')
     parser.add_argument('-e',
                         '--expand',
                         action='store_true',
@@ -76,11 +79,13 @@ def jsoncsv():
     if args.restore:
         func = restore
 
+    safe = args.safe
+
     separator = args.separator
 
     for line in fin:
         obj = json.loads(line)
-        new = func(obj, separator=separator)
+        new = func(obj, separator=separator, safe=safe)
         out = json.dumps(new, ensure_ascii=False).encode('utf-8')
         fout.write(out)
         fout.write('\n')
