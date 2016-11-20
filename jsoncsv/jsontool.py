@@ -6,6 +6,10 @@ from copy import deepcopy
 from itertools import groupby
 from operator import itemgetter
 
+from utils import encode_safe_key
+from utils import decode_safe_key
+
+
 __all__ = [
     'expand',
     'restore',
@@ -65,24 +69,30 @@ def from_leaf(leafs):
         return dict(child)
 
 
-def expand(origin, separator='.'):
-
+def expand(origin, separator='.', safe=False):
     root = origin
     leafs = gen_leaf(root)
 
     expobj = {}
     for path, value in leafs:
         path = map(str, path)
-        key = separator.join(path)
+        if safe:
+            key = encode_safe_key(path, separator)
+        else:
+            key = separator.join(path)
         expobj[key] = value
 
     return expobj
 
 
-def restore(expobj, separator='.'):
+def restore(expobj, separator='.' ,safe=False):
     leafs = []
+
     for key, value in expobj.iteritems():
-        path = key.split(separator)
+        if safe:
+            path = decode_safe_key(key, separator)
+        else:
+            path = key.split(separator)
 
         # separator.join(path)
         if key == '':
