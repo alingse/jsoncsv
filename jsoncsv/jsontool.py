@@ -13,6 +13,8 @@ from utils import decode_safe_key
 __all__ = [
     'expand',
     'restore',
+    'gen_leaf',
+    'from_leaf',
 ]
 
 

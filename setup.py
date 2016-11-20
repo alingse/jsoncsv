@@ -14,7 +14,7 @@ with open('README.rst') as f:
 setup(
     name='jsoncsv',
     version=version,
-    description='a tool convert json file to csv or xlsx',
+    description='a command tool easily convert json file to csv or xlsx',
     long_description=readme,
     author='alingse',
     author_email='alingse@foxmail.com',
