@@ -7,7 +7,7 @@ import json
 import sys
 
 from jsoncsv.jsontool import expand, restore
-from jsoncsv.dumptool import dump_csv, dump_xls, dumpfile
+from jsoncsv.dumptool import dumpfile
 
 
 def load_jsontool_parse():
@@ -97,17 +97,13 @@ def jsoncsv():
         fout.write(out)
         fout.write('\n')
 
+    fin.close()
+    fout.close()
+
 
 def mkexcel():
     parser = load_mkexcel_parse()
     args = parser.parse_args()
-
-    dumpf = dump_csv
-
-    if args.type == 'csv':
-        dumpf = dump_csv
-    if args.type == 'xls':
-        dumpf = dump_xls
 
     fin = sys.stdin
     fout = sys.stdout
@@ -118,4 +114,9 @@ def mkexcel():
     if args.output is not None:
         fout = open(args.output, 'w')
 
-    dumpfile(fin, fout, dumpf)
+    type_ = args.type
+
+    dumpfile(fin, type_, fout)
+
+    fin.close()
+    fout.close()
