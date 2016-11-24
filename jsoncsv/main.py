@@ -7,7 +7,7 @@ import json
 import sys
 
 from jsoncsv.jsontool import expand, restore
-from jsoncsv.dumptool import dump_csv, dump_xls, dumpfile
+from jsoncsv.dumptool import dumpfile
 
 
 def load_jsontool_parse():
@@ -52,10 +52,19 @@ def load_jsontool_parse():
 def load_mkexcel_parse():
     parser = argparse.ArgumentParser()
     parser.add_argument('-t',
-                        '--type',
-                        choices=['csv', 'xls'],
-                        default='csv',
-                        help='choose dump format')
+        '--type',
+        choices=['csv', 'xls'],
+        default='csv',
+        help='choose dump format')
+
+    parser.add_argument(
+        '-r',
+        '--row',
+        type=int,
+        default=None,
+        help='pre read `row` lines to load `headers`'
+        ' default is all')
+
     parser.add_argument('input',
                         nargs='?',
                         help='input file, default is stdin')
@@ -97,17 +106,13 @@ def jsoncsv():
         fout.write(out)
         fout.write('\n')
 
+    fin.close()
+    fout.close()
+
 
 def mkexcel():
     parser = load_mkexcel_parse()
     args = parser.parse_args()
-
-    dumpf = dump_csv
-
-    if args.type == 'csv':
-        dumpf = dump_csv
-    if args.type == 'xls':
-        dumpf = dump_xls
 
     fin = sys.stdin
     fout = sys.stdout
@@ -118,4 +123,10 @@ def mkexcel():
     if args.output is not None:
         fout = open(args.output, 'w')
 
-    dumpfile(fin, fout, dumpf)
+    type_ = args.type
+    row = args.row
+
+    dumpfile(fin, type_, fout, read_row=row)
+
+    fin.close()
+    fout.close()
