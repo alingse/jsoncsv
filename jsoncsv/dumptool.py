@@ -59,7 +59,6 @@ def dump_xls(fin, headers, fout, datas=None):
 
         values = [obj.get(head) for head in headers]
         values = map(patch, values)
-        values = map(str, values)
 
         self['row'] += 1
         self['cloumn'] = 0
