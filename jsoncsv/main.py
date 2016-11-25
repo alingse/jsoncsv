@@ -79,15 +79,14 @@ def jsoncsv():
     parser = load_jsontool_parse()
     args = parser.parse_args()
 
+    
     if args.expand and args.restore:
         print('can not choose both, default is `-e`', file=sys.stderr)
         exit()
-    elif args.expand:
-        func = expand
-    elif args.restore:
+
+    func = expand
+    if args.restore:
         func = restore
-    else:
-        func = expand
 
     fin = sys.stdin
     fout = sys.stdout
@@ -120,7 +119,6 @@ def mkexcel():
 
     if args.input is not None:
         fin = open(args.input, 'r')
-
     if args.output is not None:
         fout = open(args.output, 'w')
 
