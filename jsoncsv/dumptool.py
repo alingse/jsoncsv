@@ -19,7 +19,7 @@ class Dump(object):
     def initialize(self, **kwargs):
         pass
 
-    def patch(value):
+    def patch(self, value):
         if value is None:
             return ''
 
