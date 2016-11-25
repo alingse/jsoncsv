@@ -12,11 +12,12 @@ It's simple, and no need user to specify the keys. :)
 Quick Start :
 >>>>>>>>>>>>>>
 
+cat the raw.json to csv/xls on command line
 
 .. code-block:: bash
 
-    cat raw.json|jsoncsv|mkexcel > output.csv
-    cat raw.json|jsoncsv|mkexcel -t xls > output.xls
+    cat raw.json |jsoncsv |mkexcel > output.csv
+    cat raw.json |jsoncsv |mkexcel -t xls > output.xls
 
 just expand/restore the json
 
