@@ -51,7 +51,8 @@ def load_jsontool_parse():
 
 def load_mkexcel_parse():
     parser = argparse.ArgumentParser()
-    parser.add_argument('-t',
+    parser.add_argument(
+        '-t',
         '--type',
         choices=['csv', 'xls'],
         default='csv',
@@ -126,7 +127,7 @@ def mkexcel():
     type_ = args.type
     row = args.row
 
-    dumpfile(fin, type_, fout, read_row=row)
+    dumpfile(fin, fout, type_, read_row=row)
 
     fin.close()
     fout.close()
