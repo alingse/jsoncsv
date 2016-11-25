@@ -79,7 +79,6 @@ def jsoncsv():
     parser = load_jsontool_parse()
     args = parser.parse_args()
 
-    
     if args.expand and args.restore:
         print('can not choose both, default is `-e`', file=sys.stderr)
         exit()
