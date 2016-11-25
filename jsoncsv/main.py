@@ -51,7 +51,8 @@ def load_jsontool_parse():
 
 def load_mkexcel_parse():
     parser = argparse.ArgumentParser()
-    parser.add_argument('-t',
+    parser.add_argument(
+        '-t',
         '--type',
         choices=['csv', 'xls'],
         default='csv',
@@ -81,12 +82,10 @@ def jsoncsv():
     if args.expand and args.restore:
         print('can not choose both, default is `-e`', file=sys.stderr)
         exit()
-    elif args.expand:
-        func = expand
-    elif args.restore:
+
+    func = expand
+    if args.restore:
         func = restore
-    else:
-        func = expand
 
     fin = sys.stdin
     fout = sys.stdout
@@ -119,14 +118,13 @@ def mkexcel():
 
     if args.input is not None:
         fin = open(args.input, 'r')
-
     if args.output is not None:
         fout = open(args.output, 'w')
 
     type_ = args.type
     row = args.row
 
-    dumpfile(fin, type_, fout, read_row=row)
+    dumpfile(fin, fout, type_, read_row=row)
 
     fin.close()
     fout.close()

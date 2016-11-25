@@ -6,96 +6,121 @@ import json
 import xlwt
 
 
-def patch(value):
-    if value is None:
-        return ''
-    if isinstance(value, basestring):
-        return value.encode('utf-8')
-    if value == {} or value == []:
-        return ''
-    return value
+class Dump(object):
+
+    def __init__(self, fin, fout, **kwargs):
+        self.fin = fin
+        self.fout = fout
+        self.datas = []
+        self.headers = set()
+
+        self.initialize(**kwargs)
+
+    def initialize(self, **kwargs):
+        pass
+
+    def patch(self, value):
+        if value is None:
+            return ''
+
+        if isinstance(value, basestring):
+            return value.encode('utf-8')
+
+        if value == {} or value == []:
+            return ''
+
+        return value
+
+    def load_headers(self, read_row=None):
+        i = 0
+        for line in self.fin:
+            obj = json.loads(line)
+            map(self.headers.add, obj.iterkeys())
+            self.datas.append(obj)
+            if read_row is not None and i >= read_row:
+                break
+
+    def write_headers(self):
+        raise NotImplementedError
+
+    def write_obj(self, obj):
+        raise NotImplementedError
+
+    def on_finish(self):
+        pass
+
+    def dump_file(self):
+        if self.datas:
+            map(self.write_obj, self.datas)
+
+        for line in self.fin:
+            obj = json.loads(line)
+            self.write_obj(obj)
+
+    def dump(self):
+        self.write_headers()
+        self.dump_file()
+        self.on_finish()
 
 
-def dump_csv(fin, headers, fout, datas=None):
-    headers = list(headers)
- 
-    fout.write(','.join(headers))
-    fout.write('\n')
+class DumpCSV(Dump):
 
-    def write_obj(obj):
-        values = [obj.get(head) for head in headers]
-        values = map(patch, values)
-        values = map(str, values)
+    def initialize(self, separator=','):
+        self.separator = separator
+
+    def write_headers(self):
+        self.headers = list(self.headers)
+        content = self.separator.join(self.headers)
+        self.fout.write(content)
+        self.fout.write('\n')
+
+    def patch(self, value):
+        value = super(DumpCSV, self).patch(value)
+        return str(value)
+
+    def write_obj(self, obj):
+        values = [obj.get(head) for head in self.headers]
+        values = map(self.patch, values)
+        content = self.separator.join(values)
+        self.fout.write(content)
+        self.fout.write('\n')
 
 
-        fout.write(','.join(values))
-        fout.write('\n')
+class DumpExcel(Dump):
 
-    if datas:
-        map(write_obj, datas)
+    def initialize(self, **kwargs):
+        self.wb = xlwt.Workbook(encoding='utf-8')
+        self.ws = self.wb.add_sheet('Sheet1')
+        self.row = 0
+        self.cloumn = 0
 
-    for line in fin:
-        obj = json.loads(line)
-        write_obj(obj)
+    def write_headers(self):
+        self.headers = list(self.headers)
 
+        for head in self.headers:
+            self.ws.write(self.row, self.cloumn, head)
+            self.cloumn += 1
 
-def dump_xls(fin, headers, fout, datas=None):
-    headers = list(headers)
+    def write_obj(self, obj):
+        values = [obj.get(head) for head in self.headers]
+        values = map(self.patch, values)
 
-    wb = xlwt.Workbook(encoding='utf-8', style_compression=0)
-    ws = wb.add_sheet('Sheet1')
-
-    self = {}
-    self['row'] = 0
-    self['cloumn'] = 0
-    row = 0
-    cloumn = 0
-
-    for head in headers:
-        ws.write(self['row'], self['cloumn'], head)
-        self['cloumn'] += 1
-
-    def write_obj(obj):
-
-        values = [obj.get(head) for head in headers]
-        values = map(patch, values)
-        values = map(str, values)
-
-        self['row'] += 1
-        self['cloumn'] = 0
+        self.row += 1
+        self.cloumn = 0
         for value in values:
-            ws.write(self['row'], self['cloumn'], value)
-            self['cloumn'] += 1
+            self.ws.write(self.row, self.cloumn, value)
+            self.cloumn += 1
 
-    if datas:
-        map(write_obj, datas)
-
-    for line in fin:
-        obj = json.loads(line)
-        write_obj(obj)
-
-    wb.save(fout)
+    def on_finish(self):
+        self.wb.save(self.fout)
 
 
-def load_headers(fin, read_row=None):
-    headers = set()
-    datas = []
-    i = 0
-    for line in fin:
-        obj = json.loads(line)
-        map(headers.add, obj.iterkeys())
-        datas.append(obj)
-        if read_row is not None and i >= read_row:
-            break
-
-    return headers, datas
-
-
-def dumpfile(fin, type_, fout, read_row=None):
-    headers, datas = load_headers(fin, read_row)
+def dumpfile(fin, fout, type_, read_row=None):
     if type_ == 'csv':
-        func = dump_csv
+        DumpKlass = DumpCSV
     elif type_ == 'xls':
-        func = dump_xls
+        DumpKlass = DumpExcel
 
-    func(fin, headers, fout, datas=datas)
+    dump = DumpKlass(fin, fout)
+    dump.load_headers(read_row)
+    dump.dump()
