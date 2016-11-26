@@ -32,7 +32,7 @@ mkexcel the expanded json (one layer)
 .. code-block:: bash
 
     mkexcel expand.json output.csv
-    mkexcel -t xls expand.json > output.csv
+    mkexcel -t xls expand.json > output.xls
 
 safe mod
 
