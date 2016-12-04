@@ -132,7 +132,7 @@ chose dump type in ['csv', 'xls']
 NOTE/TODO
 >>>>>>>>>
 
-1. key can't be all intenger string
+1. dict keys can't be  just array indexes
 -----------------------------------
 
 example:
