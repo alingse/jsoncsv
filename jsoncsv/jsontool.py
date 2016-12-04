@@ -43,6 +43,13 @@ int_digit = lambda x: isinstance(x, int)
 str_digit = lambda x: x.isdigit()
 
 
+def is_array(keys, ensure_str=True):
+    if all(map(int_digit, keys)) or (ensure_str and all(map(str_digit, keys))):
+        keys = map(int, keys)
+        return min(keys) == 0 and max(keys) + 1 == len(keys) == len(set(keys))
+    return False
+
+
 def from_leaf(leafs):
     # (path,value),(path, value)
     leafs = list(leafs)
@@ -64,7 +71,8 @@ def from_leaf(leafs):
         _child = from_leaf(_leafs)
         child.append((head, _child))
 
-    if all(map(int_digit, heads)) or all(map(str_digit, heads)):
+    keys = map(itemgetter(0), child)
+    if is_array(keys):
         child.sort(key=lambda x: int(x[0]))
         return map(itemgetter(1), child)
     else:
