@@ -71,7 +71,8 @@ def from_leaf(leafs):
         _child = from_leaf(_leafs)
         child.append((head, _child))
 
-    if is_array(heads):
+    keys = map(itemgetter(0), child)
+    if is_array(keys):
         child.sort(key=lambda x: int(x[0]))
         return map(itemgetter(1), child)
     else:
