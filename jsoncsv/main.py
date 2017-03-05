@@ -1,130 +1,87 @@
 # coding=utf-8
 
-from __future__ import print_function
-
-import argparse
+import click
 import json
 import sys
 
 from jsoncsv.jsontool import expand, restore
 from jsoncsv.dumptool import dumpfile
+from jsoncsv.utils import separator_type
 
 
-def load_jsontool_parse():
-    parser = argparse.ArgumentParser()
-
-    def separator_type(string):
-        if len(string) > 1:
-            msg = 'separator can only be a char'
-            raise argparse.ArgumentTypeError(msg)
-        if string == '\\':
-            msg = 'separator can not be `\\` '
-            raise argparse.ArgumentTypeError(msg)
-        return string
-
-    parser.add_argument('-s',
-                        '--separator',
-                        action='store',
-                        help='the separator for join keys',
-                        type=separator_type,
-                        default='.')
-    parser.add_argument('--safe',
-                        action='store_true',
-                        help='use safe mode. key1.key2 --> key1\\.key2')
-    parser.add_argument('-e',
-                        '--expand',
-                        action='store_true',
-                        help='choose `expand` a json')
-    parser.add_argument('-r',
-                        '--restore',
-                        action='store_true',
-                        help='choose `contract` a ｀expanded` json')
-    parser.add_argument('-o',
-                        '--output',
-                        help='file for output, default is stdout')
-    parser.add_argument('input',
-                        nargs='?',
-                        help='input file, default is stdin')
-
-    return parser
-
-
-def load_mkexcel_parse():
-    parser = argparse.ArgumentParser()
-    parser.add_argument(
-        '-t',
-        '--type',
-        choices=['csv', 'xls'],
-        default='csv',
-        help='choose dump format')
-
-    parser.add_argument(
-        '-r',
-        '--row',
-        type=int,
-        default=None,
-        help='pre read `row` lines to load `headers`'
-        ' default is all')
-
-    parser.add_argument('input',
-                        nargs='?',
-                        help='input file, default is stdin')
-    parser.add_argument('output',
-                        nargs='?',
-                        help='output file, default is stdout')
-    return parser
-
-
-def jsoncsv():
-    parser = load_jsontool_parse()
-    args = parser.parse_args()
-
-    if args.expand and args.restore:
-        print('can not choose both, default is `-e`', file=sys.stderr)
-        exit()
+@click.command()
+@click.option(
+    '-s',
+    '--sep',
+    'separator',
+    type=separator_type,
+    default='.',
+    help='separator')
+@click.option('--safe', is_flag=True, help='use safe mode')
+@click.option(
+    '-r',
+    '--restore',
+    'restore_',
+    is_flag=True,
+    help='restore expanded json')
+@click.option(
+    '-e',
+    '--expand',
+    'expand_',
+    is_flag=True,
+    help='expand json')
+@click.argument(
+    'input',
+    type=click.File('r'),
+    default=sys.stdin)
+@click.argument(
+    'output',
+    type=click.File('w'),
+    default=sys.stdout)
+def jsoncsv(output, input, expand_, restore_, safe, separator):
+    if expand_ and restore_:
+        raise click.UsageError('can not choose both, default is `-e`')
 
     func = expand
-    if args.restore:
+    if restore_:
         func = restore
 
-    fin = sys.stdin
-    fout = sys.stdout
-
-    if args.input is not None:
-        fin = open(args.input, 'r')
-    if args.output is not None:
-        fout = open(args.output, 'w')
-
-    safe = args.safe
-    separator = args.separator
-
-    for line in fin:
+    for line in input:
         obj = json.loads(line)
         new = func(obj, separator=separator, safe=safe)
-        out = json.dumps(new, ensure_ascii=False).encode('utf-8')
-        fout.write(out)
-        fout.write('\n')
 
-    fin.close()
-    fout.close()
+        content = json.dumps(new, ensure_ascii=False).encode('utf-8')
+        output.write(content)
+        output.write('\n')
+
+    input.close()
+    output.close()
 
 
-def mkexcel():
-    parser = load_mkexcel_parse()
-    args = parser.parse_args()
+@click.command()
+@click.option(
+    '-t'
+    '--type',
+    'type_',
+    type=click.Choice(['csv', 'xls']),
+    default='csv',
+    help='choose dump format')
+@click.option(
+    '-r',
+    '--row',
+    type=int,
+    default=None,
+    help='number of pre-read `row` lines to load `headers`')
+@click.argument(
+    'input',
+    type=click.File('r'),
+    default=sys.stdin)
+@click.argument(
+    'output',
+    type=click.File('w'),
+    default=sys.stdout)
+def mkexcel(output, input, row, type_):
+    dumpfile(input, output, type_, read_row=row)
 
-    fin = sys.stdin
-    fout = sys.stdout
-
-    if args.input is not None:
-        fin = open(args.input, 'r')
-    if args.output is not None:
-        fout = open(args.output, 'w')
-
-    type_ = args.type
-    row = args.row
-
-    dumpfile(fin, fout, type_, read_row=row)
-
-    fin.close()
-    fout.close()
+    input.close()
+    output.close()
