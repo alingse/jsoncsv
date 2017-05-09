@@ -5,7 +5,7 @@ import json
 import sys
 
 from jsoncsv.jsontool import expand, restore
-from jsoncsv.dumptool import dumpfile
+from jsoncsv.dumptool import dumpexcel
 from jsoncsv.utils import separator_type
 
 
@@ -81,7 +81,7 @@ def jsoncsv(output, input, expand_, restore_, safe, separator):
     type=click.File('w'),
     default=sys.stdout)
 def mkexcel(output, input, row, type_):
-    dumpfile(input, output, type_, read_row=row)
+    dumpexcel(input, output, type_, read_row=row)
 
     input.close()
     output.close()
