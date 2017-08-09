@@ -143,7 +143,17 @@ example:
 	[1, [1, 2]]
 
 
-2. csv separator and clean mkexcel args
+2. mkexcel enable sort keys
+-----------------------------------------
+
+wait next version
+
+2. mkexcel enable hooks
+-----------------------------------------
+
+wait next version
+
+3. csv separator and clean mkexcel args
 -----------------------------------------
 
 wait next version
