@@ -60,7 +60,7 @@ def jsoncsv(output, input, expand_, restore_, safe, separator):
 
 @click.command()
 @click.option(
-    '-t'
+    '-t',
     '--type',
     'type_',
     type=click.Choice(['csv', 'xls']),
@@ -72,6 +72,13 @@ def jsoncsv(output, input, expand_, restore_, safe, separator):
     type=int,
     default=None,
     help='number of pre-read `row` lines to load `headers`')
+@click.option(
+    '-s',
+    '--sort',
+    'sort_',
+    is_flag=True,    
+    default=False,
+    help='enable sort the headers keys')
 @click.argument(
     'input',
     type=click.File('r'),
@@ -80,8 +87,8 @@ def jsoncsv(output, input, expand_, restore_, safe, separator):
     'output',
     type=click.File('w'),
     default=sys.stdout)
-def mkexcel(output, input, row, type_):
-    dumpexcel(input, output, type_, read_row=row)
+def mkexcel(output, input, sort_, row, type_):
+    dumpexcel(input, output, type_, read_row=row, sort_type=sort_)
 
     input.close()
     output.close()

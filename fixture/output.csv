@@ -1,5 +1,5 @@
-detail.when,detail.what,title,detail.where,detail.who.2,detail.who.1,detail.who.0,detail.how
-2016,eat,AAAA,beijing,three,two,one,
-2016,play,BBBB,湖北,three,two,one,
-2015,,CCCC,chengdu,,three,two,
-2015,happy,DDDD,,,,,online
+detail.when,detail.what,title,detail.where,detail.who.2,detail.who.1,detail.who.0
+2016,eat,AAAA,beijing,three,two,one
+2016,play,BBBB,湖北,three,two,one
+2015,,CCCC,chengdu,,three,two
+2015,happy,DDDD,,,,

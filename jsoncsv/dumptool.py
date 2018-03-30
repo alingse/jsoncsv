@@ -45,10 +45,12 @@ class Dump(object):
 
 class ReadHeadersMixin(object):
 
-    def load_headers(fin, read_row=None):
+    @staticmethod
+    def load_headers(fin, read_row=None, sort_type=None):
         headers = set()
         datas = []
 
+        # read
         if not read_row or read_row < 1:
             read_row = 1
 
@@ -61,20 +63,24 @@ class ReadHeadersMixin(object):
             read_row -= 1
             if not read_row:
                 break
+        # sort
+        if sort_type:
+            headers = sorted(list(headers))
 
-        return (headers, datas)
+        return (list(headers), datas)
 
 
 class DumpExcel(Dump, ReadHeadersMixin):
 
     def initialize(self, **kwargs):
         super(DumpExcel, self).initialize(**kwargs)
-        self.read_row = kwargs.get('read_row')
+        self._read_row = kwargs.get('read_row')
+        self._sort_type = kwargs.get('sort_type')
 
     def prepare(self):
-        headers, datas = self.load_headers(self.fin, self.read_row)
-        self.headers = headers
-        self.datas = datas
+        headers, datas = self.load_headers(self.fin, self._read_row, self._sort_type)
+        self._headers = headers
+        self._datas = datas
 
     def write_headers(self):
         raise NotImplementedError
@@ -85,7 +91,7 @@ class DumpExcel(Dump, ReadHeadersMixin):
     def dump_file(self):
         self.write_headers()
 
-        for obj in self.datas:
+        for obj in self._datas:
             self.write_obj(obj)
 
         for line in self.fin:
@@ -98,11 +104,11 @@ class DumpCSV(DumpExcel):
     def initialize(self, **kwargs):
         super(DumpCSV, self).initialize(**kwargs)
 
-        self.separator = kwargs.get('separator', ',')
+        self._separator = kwargs.get('separator', ',')
 
     def write_headers(self):
-        content = self.separator.join(list(self.headers))
-        self.fout.write(content)
+        header = self._separator.join(self._headers)
+        self.fout.write(header)
         self.fout.write('\n')
 
     def patch(self, value):
@@ -112,9 +118,9 @@ class DumpCSV(DumpExcel):
     def write_obj(self, obj):
         values = [
             self.patch(obj.get(head))
-            for head in self.headers
+            for head in self._headers
         ]
-        content = self.separator.join(values)
+        content = self._separator.join(values)
         self.fout.write(content)
         self.fout.write('\n')
 
@@ -131,21 +137,19 @@ class DumpXLS(DumpExcel):
         self.cloumn = 0
 
     def write_headers(self):
-        for head in self.headers:
+        for head in self._headers:
             self.ws.write(self.row, self.cloumn, head)
             self.cloumn += 1
         self.row += 1
 
     def write_obj(self, obj):
-        values = [
-            self.patch(obj.get(head))
-            for head in self.headers
-        ]
-
         self.cloumn = 0
-        for value in values:
+
+        for head in self._headers:            
+            value = self.patch(obj.get(head))
             self.ws.write(self.row, self.cloumn, value)
             self.cloumn += 1
+
         self.row += 1
 
     def on_finish(self):
