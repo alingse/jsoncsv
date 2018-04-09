@@ -1,13 +1,14 @@
 # coding=utf-8
 # author@alingse
 # 2016.05.27
+from __future__ import absolute_import
 
 from copy import deepcopy
 from itertools import groupby
 from operator import itemgetter
 
-from .utils import encode_safe_key
-from .utils import decode_safe_key
+from jsoncsv.utils import encode_safe_key
+from jsoncsv.utils import decode_safe_key
 
 
 __all__ = [
