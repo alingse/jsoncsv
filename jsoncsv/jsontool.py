@@ -1,13 +1,14 @@
 # coding=utf-8
 # author@alingse
 # 2016.05.27
+from __future__ import absolute_import
 
 from copy import deepcopy
 from itertools import groupby
 from operator import itemgetter
 
-from utils import encode_safe_key
-from utils import decode_safe_key
+from jsoncsv.utils import encode_safe_key
+from jsoncsv.utils import decode_safe_key
 
 
 __all__ = [
@@ -39,8 +40,8 @@ def gen_leaf(root, path=None):
                 yield leaf
 
 
-int_digit = lambda x: isinstance(x, int)
-str_digit = lambda x: x.isdigit()
+int_digit = lambda x: isinstance(x, int)  # noqa
+str_digit = lambda x: isinstance(x, str) and x.isdigit()  # noqa
 
 
 def is_array(keys, ensure_str=True):

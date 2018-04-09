@@ -57,3 +57,6 @@ class Testjsontool(unittest.TestCase):
         self.assertEqual(s[3], _s[3])
 
         self.assertListEqual(s[4], _s[4])
+
+    def test_is_array(self):
+        pass

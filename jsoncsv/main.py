@@ -76,7 +76,7 @@ def jsoncsv(output, input, expand_, restore_, safe, separator):
     '-s',
     '--sort',
     'sort_',
-    is_flag=True,    
+    is_flag=True,
     default=False,
     help='enable sort the headers keys')
 @click.argument(
