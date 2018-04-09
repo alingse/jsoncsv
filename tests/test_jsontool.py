@@ -7,6 +7,7 @@ import unittest
 from jsoncsv.jsontool import expand, restore
 from jsoncsv.jsontool import is_array
 
+
 class Testjsontool(unittest.TestCase):
 
     def test_string(self):
