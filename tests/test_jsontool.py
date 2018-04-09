@@ -5,6 +5,7 @@
 import unittest
 
 from jsoncsv.jsontool import expand, restore
+from jsoncsv.jsontool import is_array
 
 
 class Testjsontool(unittest.TestCase):
@@ -59,4 +60,7 @@ class Testjsontool(unittest.TestCase):
         self.assertListEqual(s[4], _s[4])
 
     def test_is_array(self):
-        pass
+        assert is_array([0, 1, 2, 3])
+        assert is_array(['0', '1', '2', '3'])
+        assert not is_array([1, 2, 3])
+        assert not is_array(['0', 1, 2])

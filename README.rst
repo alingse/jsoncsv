@@ -4,7 +4,11 @@ jsoncsv : convert json to csv or xlsx
 
 .. image:: https://img.shields.io/pypi/v/jsoncsv.svg
     :target: https://pypi.python.org/pypi/jsoncsv
+
 .. image:: https://api.travis-ci.org/alingse/jsoncsv.svg?branch=master
+
+.. image:: https://coveralls.io/repos/github/alingse/jsoncsv/badge.svg
+    :target: https://coveralls.io/github/alingse/jsoncsv
 
 
 jsoncsv && mkexcel is a command tool to convert json file to csv/xlsx file.
