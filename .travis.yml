@@ -7,9 +7,13 @@ install:
     - pip install .
     - pip install flake8
     - pip install coverage
+    - pip install coveralls
 
 script:
     - flake8 jsoncsv tests --max-line-length=200
     - nosetests --cover-package=jsoncsv --with-coverage
     - python setup.py install
     - cat fixture/expand.json|jsoncsv -e --safe
+
+after_success:
+  - coveralls
