@@ -13,7 +13,7 @@ script:
     - flake8 jsoncsv tests --max-line-length=200
     - nosetests --cover-package=jsoncsv --with-coverage
     - python setup.py install
-    - cat fixture/expand.json|jsoncsv -e --safe
+    - cat fixture/raw.json|jsoncsv -e --safe
 
 after_success:
   - coveralls
