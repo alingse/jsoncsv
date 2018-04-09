@@ -5,6 +5,8 @@ python:
 
 install:
     - pip install .
+    - pip install flake8
 
 script:
-    - nosetests -v
+    - flake8 jsoncsv tests --max-line-length=200
+    - nosetests --cover-package=jsoncsv --with-coverage

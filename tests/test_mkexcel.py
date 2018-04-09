@@ -19,7 +19,7 @@ class Testdumptool(unittest.TestCase):
 
         output = open('./fixture/output.csv', 'r')
         fout = open('./fixture/output2.csv', 'r')
-        
+
         self.assertEqual(output.read(), fout.read())
 
         output.close()
@@ -35,7 +35,7 @@ class Testdumptool(unittest.TestCase):
 
         output = open('./fixture/output.sort.csv', 'r')
         fout = open('./fixture/tmp.csv', 'r')
-        
+
         self.assertEqual(output.read(), fout.read())
 
         output.close()

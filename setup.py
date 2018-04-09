@@ -4,16 +4,13 @@
 
 from setuptools import setup, find_packages
 
-from jsoncsv import __version__
-
-version = '.'.join(map(str, __version__))
 
 with open('README.rst') as f:
     readme = f.read()
 
 setup(
     name='jsoncsv',
-    version=version,
+    version='2.0.8a',
     description='a command tool easily convert json file to csv or xlsx',
     long_description=readme,
     author='alingse',

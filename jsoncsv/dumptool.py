@@ -145,7 +145,7 @@ class DumpXLS(DumpExcel):
     def write_obj(self, obj):
         self.cloumn = 0
 
-        for head in self._headers:            
+        for head in self._headers:
             value = self.patch(obj.get(head))
             self.ws.write(self.row, self.cloumn, value)
             self.cloumn += 1
