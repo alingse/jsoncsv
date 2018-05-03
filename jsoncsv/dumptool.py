@@ -20,7 +20,7 @@ class Dump(object):
         if value is None:
             return ''
 
-        if isinstance(value, basestring):
+        if isinstance(value, str):
             return value.encode('utf-8')
 
         if value == {} or value == []:
@@ -57,7 +57,7 @@ class ReadHeadersMixin(object):
         for line in fin:
             obj = json.loads(line)
 
-            headers.update(obj.iterkeys())
+            headers.update(iter(obj.keys()))
             datas.append(obj)
 
             read_row -= 1
@@ -113,7 +113,7 @@ class DumpCSV(DumpExcel):
 
     def patch(self, value):
         value = super(DumpCSV, self).patch(value)
-        return str(value)
+        return unicode(value)
 
     def write_obj(self, obj):
         values = [
@@ -121,7 +121,7 @@ class DumpCSV(DumpExcel):
             for head in self._headers
         ]
         content = self._separator.join(values)
-        self.fout.write(content)
+        self.fout.write(content.encode('utf-8'))
         self.fout.write('\n')
 
 

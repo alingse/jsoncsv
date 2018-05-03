@@ -1,7 +1,7 @@
 # coding=utf-8
 # author@alingse
 # 2016.05.27
-from __future__ import absolute_import
+
 
 from copy import deepcopy
 from itertools import groupby
@@ -29,7 +29,7 @@ def gen_leaf(root, path=None):
         yield leaf
     else:
         if isinstance(root, dict):
-            items = root.iteritems()
+            items = iter(root.items())
         else:
             items = enumerate(root)
 
@@ -46,7 +46,7 @@ str_digit = lambda x: isinstance(x, str) and x.isdigit()  # noqa
 
 def is_array(keys, ensure_str=True):
     if all(map(int_digit, keys)) or (ensure_str and all(map(str_digit, keys))):
-        keys = map(int, keys)
+        keys = list(map(int, keys))
         return min(keys) == 0 and max(keys) + 1 == len(keys) == len(set(keys))
     return False
 
@@ -62,20 +62,20 @@ def from_leaf(leafs):
 
     heads = [leaf[0].pop(0) for leaf in leafs]
 
-    zlist = zip(heads, leafs)
+    zlist = list(zip(heads, leafs))
     glist = groupby(sorted(zlist, key=itemgetter(0)), key=itemgetter(0))
 
     child = []
     for g in glist:
         head, _zlist = g
-        _leafs = map(itemgetter(1), _zlist)
+        _leafs = list(map(itemgetter(1), _zlist))
         _child = from_leaf(_leafs)
         child.append((head, _child))
 
-    keys = map(itemgetter(0), child)
+    keys = list(map(itemgetter(0), child))
     if is_array(keys):
         child.sort(key=lambda x: int(x[0]))
-        return map(itemgetter(1), child)
+        return list(map(itemgetter(1), child))
     else:
         return dict(child)
 
@@ -86,7 +86,7 @@ def expand(origin, separator='.', safe=False):
 
     expobj = {}
     for path, value in leafs:
-        path = map(str, path)
+        path = list(map(str, path))
         if safe:
             key = encode_safe_key(path, separator)
         else:
@@ -99,7 +99,7 @@ def expand(origin, separator='.', safe=False):
 def restore(expobj, separator='.', safe=False):
     leafs = []
 
-    for key, value in expobj.iteritems():
+    for key, value in expobj.items():
         if safe:
             path = decode_safe_key(key, separator)
         else:
