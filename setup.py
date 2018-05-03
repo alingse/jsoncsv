@@ -6,11 +6,11 @@ from setuptools import setup, find_packages
 
 
 with open('README.rst') as f:
-    readme = f.read()
+    readme = f.read().decode('utf-8')
 
 setup(
     name='jsoncsv',
-    version='2.0.9',
+    version='2.0.8b',
     description='a command tool easily convert json file to csv or xlsx',
     long_description=readme,
     author='alingse',
