@@ -41,7 +41,7 @@ def gen_leaf(root, path=None):
 
 
 int_digit = lambda x: isinstance(x, int)  # noqa
-str_digit = lambda x: isinstance(x, str) and x.isdigit()  # noqa
+str_digit = lambda x: isinstance(x, basestring) and x.isdigit()  # noqa
 
 
 def is_array(keys, ensure_str=True):
@@ -86,7 +86,7 @@ def expand(origin, separator='.', safe=False):
 
     expobj = {}
     for path, value in leafs:
-        path = map(str, path)
+        path = map(unicode, path)
         if safe:
             key = encode_safe_key(path, separator)
         else:

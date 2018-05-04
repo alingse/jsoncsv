@@ -20,9 +20,6 @@ class Dump(object):
         if value is None:
             return ''
 
-        if isinstance(value, basestring):
-            return value.encode('utf-8')
-
         if value == {} or value == []:
             return ''
 
@@ -108,12 +105,12 @@ class DumpCSV(DumpExcel):
 
     def write_headers(self):
         header = self._separator.join(self._headers)
-        self.fout.write(header)
+        self.fout.write(header.encode('utf-8'))
         self.fout.write('\n')
 
     def patch(self, value):
         value = super(DumpCSV, self).patch(value)
-        return str(value)
+        return unicode(value)
 
     def write_obj(self, obj):
         values = [
@@ -121,14 +118,14 @@ class DumpCSV(DumpExcel):
             for head in self._headers
         ]
         content = self._separator.join(values)
-        self.fout.write(content)
+        self.fout.write(content.encode('utf-8'))
         self.fout.write('\n')
 
 
 class DumpXLS(DumpExcel):
 
     def initialize(self, **kwargs):
-        super(DumpCSV, self).initialize(**kwargs)
+        super(DumpXLS, self).initialize(**kwargs)
 
         self.sheet = kwargs.get('sheet', 'Sheet1')
         self.wb = xlwt.Workbook(encoding='utf-8')

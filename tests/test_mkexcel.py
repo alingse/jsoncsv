@@ -9,16 +9,17 @@ from jsoncsv.dumptool import dumpexcel
 
 class Testdumptool(unittest.TestCase):
 
+    # FIXME (使用虚拟文件)
     def test_dumpexcel_csv(self):
-        fin = open('./fixture/expand.json', 'r')
-        fout = open('./fixture/output2.csv', 'w')
+        fin = open('./fixture/files/expand.1.json', 'r')
+        fout = open('./fixture/files/tmp.output.1.csv', 'w')
 
         dumpexcel(fin, fout, 'csv')
         fin.close()
         fout.close()
 
-        output = open('./fixture/output.csv', 'r')
-        fout = open('./fixture/output2.csv', 'r')
+        output = open('./fixture/files/output.1.csv', 'r')
+        fout = open('./fixture/files/tmp.output.1.csv', 'r')
 
         self.assertEqual(output.read(), fout.read())
 
@@ -26,15 +27,15 @@ class Testdumptool(unittest.TestCase):
         fout.close()
 
     def test_dumpexcel_csv_with_sort(self):
-        fin = open('./fixture/expand.json', 'r')
-        fout = open('./fixture/tmp.csv', 'w')
+        fin = open('./fixture/files/expand.1.json', 'r')
+        fout = open('./fixture/files/tmp.output.1.sort.csv', 'w')
 
         dumpexcel(fin, fout, 'csv', sort_type=True)
         fin.close()
         fout.close()
 
-        output = open('./fixture/output.sort.csv', 'r')
-        fout = open('./fixture/tmp.csv', 'r')
+        output = open('./fixture/files/output.1.sort.csv', 'r')
+        fout = open('./fixture/files/tmp.output.1.sort.csv', 'r')
 
         self.assertEqual(output.read(), fout.read())
 
