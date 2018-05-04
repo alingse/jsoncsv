@@ -9,6 +9,9 @@ __pycache__/
 # nosetests
 cover/
 
+# test fixture
+fixture/files/tmp.*
+
 # Distribution / packaging
 .Python
 env/

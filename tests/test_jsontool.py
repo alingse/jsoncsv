@@ -64,3 +64,12 @@ class Testjsontool(unittest.TestCase):
         assert is_array(['0', '1', '2', '3'])
         assert not is_array([1, 2, 3])
         assert not is_array(['0', 1, 2])
+
+    def test_unicode(self):
+        data = [
+            {u"河流名字": u"长江", u"河流长度": u"6000千米"},
+            {u"河流名字": u"黄河", u"河流长度": u"5000千米"}
+        ]
+
+        expobj = expand(data)
+        assert expobj

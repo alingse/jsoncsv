@@ -12,6 +12,6 @@ class Testjsoncsv(unittest.TestCase):
 
     def test_jsoncsv_expand(self):
         runner = CliRunner()
-        args = ['-e', 'fixture/raw.json', 'fixture/expand.2.json']
+        args = ['-e', 'fixture/files/raw.0.json', 'fixture/files/tmp.expand.0.json']
         result = runner.invoke(jsoncsv, args=args)
         assert result.exit_code == 0
