@@ -3,14 +3,17 @@
 # 2016.10.07
 
 from setuptools import setup, find_packages
-
+from jsoncsv import PY3
 
 with open('README.rst') as f:
-    readme = f.read().decode('utf-8')
+    if PY3:
+        readme = f.read()
+    else:
+        readme = f.read().decode('utf-8')
 
 setup(
     name='jsoncsv',
-    version='2.0.9dev',
+    version='2.0.9.dev0',
     description='a command tool easily convert json file to csv or xlsx',
     long_description=readme,
     author='alingse',

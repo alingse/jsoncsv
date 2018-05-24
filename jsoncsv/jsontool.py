@@ -67,22 +67,25 @@ def from_leaf(leafs):
 
     heads = [leaf[0].pop(0) for leaf in leafs]
 
-    zlist = zip(heads, leafs)
-    glist = groupby(sorted(zlist, key=itemgetter(0)), key=itemgetter(0))
+    _get_head = itemgetter(0)
+    _get_leaf = itemgetter(1)
+
+    zlist = list(zip(heads, leafs))
+    glist = groupby(sorted(zlist, key=_get_head), key=_get_head)
 
     child = []
     for g in glist:
         head, _zlist = g
-        _leafs = map(itemgetter(1), _zlist)
+        _leafs = map(_get_leaf, _zlist)
         _child = from_leaf(_leafs)
         child.append((head, _child))
 
-    keys = map(itemgetter(0), child)
-    if is_array(keys):
+    child_keys = map(_get_head, child)
+    if is_array(child_keys):
         child.sort(key=lambda x: int(x[0]))
-        return map(itemgetter(1), child)
-    else:
-        return dict(child)
+        return list(map(_get_leaf, child))
+
+    return dict(child)
 
 
 def expand(origin, separator='.', safe=False):
@@ -119,7 +122,6 @@ def restore(expobj, separator='.', safe=False):
         else:
             path = key.split(separator)
 
-        # separator.join(path)
         if key == '':
             path = []
 
