@@ -61,8 +61,7 @@ class ReadHeadersMixin(object):
             read_row -= 1
             if not read_row:
                 break
-        # sort
-        # if sort_type:
+        # TODO: add some sort_type here
         headers = sorted(list(headers))
 
         return (list(headers), datas)
