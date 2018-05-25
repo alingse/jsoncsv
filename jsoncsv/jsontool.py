@@ -7,6 +7,7 @@ from copy import deepcopy
 from itertools import groupby
 from operator import itemgetter
 
+from jsoncsv import PY3
 from jsoncsv.utils import encode_safe_key
 from jsoncsv.utils import decode_safe_key
 
@@ -29,7 +30,10 @@ def gen_leaf(root, path=None):
         yield leaf
     else:
         if isinstance(root, dict):
-            items = root.iteritems()
+            if PY3:
+                items = root.items()
+            else:
+                items = root.iteritems()
         else:
             items = enumerate(root)
 
@@ -40,21 +44,22 @@ def gen_leaf(root, path=None):
                 yield leaf
 
 
-int_digit = lambda x: isinstance(x, int)  # noqa
-str_digit = lambda x: isinstance(x, basestring) and x.isdigit()  # noqa
-
-
 def is_array(keys, ensure_str=True):
-    if all(map(int_digit, keys)) or (ensure_str and all(map(str_digit, keys))):
-        keys = map(int, keys)
-        return min(keys) == 0 and max(keys) + 1 == len(keys) == len(set(keys))
+    copy_keys = list(deepcopy(keys))
+    int_keys = list(range(len(copy_keys)))
+    if copy_keys == int_keys:
+        return True
+    if ensure_str:
+        str_keys = list(map(str, int_keys))
+        if copy_keys == str_keys:
+            return True
     return False
 
 
 def from_leaf(leafs):
-    # (path,value),(path, value)
+    # [(path, value), (path, value)]
     leafs = list(leafs)
-    # leaf
+
     if len(leafs) == 1:
         path, value = leafs[0]
         if path == []:
@@ -62,22 +67,25 @@ def from_leaf(leafs):
 
     heads = [leaf[0].pop(0) for leaf in leafs]
 
-    zlist = zip(heads, leafs)
-    glist = groupby(sorted(zlist, key=itemgetter(0)), key=itemgetter(0))
+    _get_head = itemgetter(0)
+    _get_leaf = itemgetter(1)
+
+    zlist = list(zip(heads, leafs))
+    glist = groupby(sorted(zlist, key=_get_head), key=_get_head)
 
     child = []
     for g in glist:
         head, _zlist = g
-        _leafs = map(itemgetter(1), _zlist)
+        _leafs = map(_get_leaf, _zlist)
         _child = from_leaf(_leafs)
         child.append((head, _child))
 
-    keys = map(itemgetter(0), child)
-    if is_array(keys):
+    child_keys = map(_get_head, child)
+    if is_array(child_keys):
         child.sort(key=lambda x: int(x[0]))
-        return map(itemgetter(1), child)
-    else:
-        return dict(child)
+        return list(map(_get_leaf, child))
+
+    return dict(child)
 
 
 def expand(origin, separator='.', safe=False):
@@ -86,7 +94,11 @@ def expand(origin, separator='.', safe=False):
 
     expobj = {}
     for path, value in leafs:
-        path = map(unicode, path)
+        if PY3:
+            path = map(str, path)
+        else:
+            path = map(unicode, path)
+
         if safe:
             key = encode_safe_key(path, separator)
         else:
@@ -99,13 +111,17 @@ def expand(origin, separator='.', safe=False):
 def restore(expobj, separator='.', safe=False):
     leafs = []
 
-    for key, value in expobj.iteritems():
+    if PY3:
+        items = expobj.items()
+    else:
+        items = expobj.iteritems()
+
+    for key, value in items:
         if safe:
             path = decode_safe_key(key, separator)
         else:
             path = key.split(separator)
 
-        # separator.join(path)
         if key == '':
             path = []
 

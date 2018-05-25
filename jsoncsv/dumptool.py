@@ -5,6 +5,8 @@
 import json
 import xlwt
 
+from jsoncsv import PY3
+
 
 class Dump(object):
 
@@ -53,16 +55,14 @@ class ReadHeadersMixin(object):
 
         for line in fin:
             obj = json.loads(line)
-
-            headers.update(obj.iterkeys())
+            headers.update(obj.keys())
             datas.append(obj)
 
             read_row -= 1
             if not read_row:
                 break
-        # sort
-        if sort_type:
-            headers = sorted(list(headers))
+        # TODO: add some sort_type here
+        headers = sorted(list(headers))
 
         return (list(headers), datas)
 
@@ -105,12 +105,18 @@ class DumpCSV(DumpExcel):
 
     def write_headers(self):
         header = self._separator.join(self._headers)
-        self.fout.write(header.encode('utf-8'))
+        if PY3:
+            self.fout.write(header)
+        else:
+            self.fout.write(header.encode('utf-8'))
         self.fout.write('\n')
 
     def patch(self, value):
         value = super(DumpCSV, self).patch(value)
-        return unicode(value)
+        if PY3:
+            return str(value)
+        else:
+            return unicode(value)
 
     def write_obj(self, obj):
         values = [
@@ -118,7 +124,10 @@ class DumpCSV(DumpExcel):
             for head in self._headers
         ]
         content = self._separator.join(values)
-        self.fout.write(content.encode('utf-8'))
+        if PY3:
+            self.fout.write(content)
+        else:
+            self.fout.write(content.encode('utf-8'))
         self.fout.write('\n')
 
 

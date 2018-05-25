@@ -4,6 +4,7 @@ import click
 import json
 import sys
 
+from jsoncsv import PY3
 from jsoncsv.jsontool import expand, restore
 from jsoncsv.dumptool import dumpexcel
 from jsoncsv.utils import separator_type
@@ -49,9 +50,11 @@ def jsoncsv(output, input, expand_, restore_, safe, separator):
     for line in input:
         obj = json.loads(line)
         new = func(obj, separator=separator, safe=safe)
-
-        content = json.dumps(new, ensure_ascii=False).encode('utf-8')
-        output.write(content)
+        content = json.dumps(new, ensure_ascii=False)
+        if PY3:
+            output.write(content)
+        else:
+            output.write(content.encode('utf-8'))
         output.write('\n')
 
     input.close()
