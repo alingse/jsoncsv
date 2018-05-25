@@ -97,7 +97,7 @@ def expand(origin, separator='.', safe=False):
         if PY3:
             path = map(str, path)
         else:
-            path = map(unicode, path)
+            path = map(unicode, path)  # noqa
 
         if safe:
             key = encode_safe_key(path, separator)

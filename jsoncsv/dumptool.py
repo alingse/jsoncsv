@@ -116,7 +116,7 @@ class DumpCSV(DumpExcel):
         if PY3:
             return str(value)
         else:
-            return unicode(value)
+            return unicode(value)  # noqa
 
     def write_obj(self, obj):
         values = [
