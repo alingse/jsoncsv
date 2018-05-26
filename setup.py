@@ -14,7 +14,7 @@ setup(
     name='jsoncsv',
     version='2.0.9',
     url='https://github.com/alingse/jsoncsv',
-    description='a command tool easily convert json file to csv or xlsx',
+    description='A command tool easily convert json file to csv or xlsx.',
     long_description=readme,
     author='alingse',
     author_email='alingse@foxmail.com',

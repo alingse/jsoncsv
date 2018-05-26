@@ -1,6 +1,6 @@
 
 jsoncsv : convert json to csv or xlsx
-=================================================
+==========================================
 
 .. image:: https://img.shields.io/pypi/v/jsoncsv.svg
     :target: https://pypi.python.org/pypi/jsoncsv
@@ -16,7 +16,7 @@ jsoncsv && mkexcel is a command tool to convert json file to csv/xlsx file.
 It's simple, and no need user to specify the keys. :)
 
 Quick Start :
->>>>>>>>>>>>>>
+=================
 
 cat the raw.json to csv/xls on command line
 
@@ -139,7 +139,7 @@ NOTE/TODO
 >>>>>>>>>
 
 1. dict keys can't be  just array indexes
------------------------------------
+--------------------------------------------
 
 example:
 
@@ -149,17 +149,7 @@ example:
 	[1, [1, 2]]
 
 
-2. mkexcel enable sort keys
------------------------------------------
-
-wait next version
-
 2. mkexcel enable hooks
------------------------------------------
-
-wait next version
-
-3. csv separator and clean mkexcel args
 -----------------------------------------
 
 wait next version
