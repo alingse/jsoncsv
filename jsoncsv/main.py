@@ -92,7 +92,7 @@ def jsoncsv(output, input, expand_, restore_, safe, separator):
     default=None)
 def mkexcel(output, input, sort_, row, type_):
     if output is None:
-        output = click.get_binary_stream('stdout')
+        click.get_binary_stream('stdout')
 
     dumpexcel(input, output, type_, read_row=row, sort_type=sort_)
 
