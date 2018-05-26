@@ -2,6 +2,7 @@ language: python
 sudo: false
 python:
     - "2.7"
+    - "3.5"
 
 install:
     - pip install .
@@ -13,7 +14,7 @@ script:
     - flake8 jsoncsv tests --max-line-length=200
     - nosetests --cover-package=jsoncsv --with-coverage
     - python setup.py install
-    - cat fixture/files/raw.0.json|jsoncsv -e > fixture/files/tmp.expand.0.json && diff fixture/files/expand.0.json fixture/files/tmp.expand.0.json
+    - cat fixture/files/raw.0.json|jsoncsv -e > fixture/files/tmp.expand.0.json
     - cat fixture/files/raw.2.json|jsoncsv|mkexcel -t xls > fixture/files/tmp.output.2.xls
     - cat fixture/files/raw.2.json|jsoncsv|mkexcel -t csv > fixture/files/tmp.output.2..csv
 
