@@ -89,10 +89,10 @@ def jsoncsv(output, input, expand_, restore_, safe, separator):
 @click.argument(
     'output',
     type=click.File('wb'),
-    default=None)
+    default=sys.stdout)
 def mkexcel(output, input, sort_, row, type_):
-    if output is None:
-        click.get_binary_stream('stdout')
+    if output == sys.stdout and type_ == "xls":
+        output = click.get_binary_stream('stdout')
 
     dumpexcel(input, output, type_, read_row=row, sort_type=sort_)
 
