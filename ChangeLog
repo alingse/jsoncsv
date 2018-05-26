@@ -1,21 +1,25 @@
+2018.05.26
+
+- 2.0.9 support python3
+
 2018.05.04
 
-    2.0.8 support unicode
+- 2.0.8 support unicode
 
 2018.05.03
 
-    2.0.8b fix setup on windows(maybe)
+- 2.0.8b fix setup on windows(maybe)
 
 2018.04.09
 
-    2.0.8a clean code & add travis
+- 2.0.8a clean code & add travis
 
 2018.03.30
 
-    2.0.7 support sort headers on dump csv
+- 2.0.7 support sort headers on dump csv
 
 2017.05.10
 
-    2.0.6 clean the mkexcel
+- 2.0.6 clean the mkexcel
 
-....... the earlier version is jsut... debug
+....... the earlier version is jsut... fun
