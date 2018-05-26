@@ -41,3 +41,12 @@ class Testdumptool(unittest.TestCase):
 
         output.close()
         fout.close()
+
+    def test_dumpcexcel_xls(self):
+        fin = open('./fixture/files/expand.1.json', 'r')
+        fout = open('./fixture/files/tmp.output.1.xls', 'wb')
+
+        dumpexcel(fin, fout, 'xls')
+
+        fin.close()
+        fout.close()
