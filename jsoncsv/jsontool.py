@@ -135,10 +135,10 @@ def restore(expobj, separator='.', safe=False):
     return origin
 
 
-def convert_json(fin, fout, type="expand", separator=".", safe=False):
-    if type == "expand":
+def convert_json(fin, fout, typ="expand", separator=".", safe=False):
+    if typ == "expand":
         func = expand
-    elif type == "restore":
+    elif typ == "restore":
         func = restore
     else:
         raise ValueError("unknow convert_json type")

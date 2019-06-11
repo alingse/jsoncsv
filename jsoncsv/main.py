@@ -44,11 +44,11 @@ def jsoncsv(output, input, expand, restore, safe, separator):
     if expand and restore:
         raise click.UsageError('can not choose both, default is `-e`')
 
-    type = "expand"  # default
+    typ = "expand"  # default
     if restore:
-        type = "restore"
+        typ = "restore"
 
-    convert_json(input, output, type, separator, safe)
+    convert_json(input, output, typ, separator, safe)
 
     input.close()
     output.close()

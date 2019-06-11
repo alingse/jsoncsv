@@ -114,7 +114,7 @@ class TestConvertJSON(unittest.TestCase):
         else:
             fout = io.BytesIO()
 
-        convert_json(fin, fout, type="restore")
+        convert_json(fin, fout, typ="restore")
 
         self.assertEqual('{"a": {"b": 3}}\n{"a": {"c": 4}}\n', fout.getvalue())
 
