@@ -29,15 +29,15 @@ class TestJSONTool(unittest.TestCase):
 
     def test_dict(self):
         s = {
-                "s": 1,
-                "w": 5,
-                "t": {
-                    "m": 0,
-                    "x": {
-                        "y": "z"
-                        }
-                    }
-            }
+            "s": 1,
+            "w": 5,
+            "t": {
+                "m": 0,
+                "x": {
+                    "y": "z"
+                },
+            },
+        }
 
         exp = expand(s)
         _s = restore(exp)
@@ -46,12 +46,12 @@ class TestJSONTool(unittest.TestCase):
 
     def test_complex(self):
         s = [
-                {"s": 0},
-                {"t": ["2", {"x": "z"}]},
-                0,
-                "w",
-                ["x", "g", 1]
-            ]
+            {"s": 0},
+            {"t": ["2", {"x": "z"}]},
+            0,
+            "w",
+            ["x", "g", 1]
+        ]
         exp = expand(s)
         _s = restore(exp)
 

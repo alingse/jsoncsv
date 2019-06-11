@@ -2,6 +2,7 @@
 # author@alingse
 # 2016.11.20
 
+import click
 
 __all__ = []
 
@@ -9,8 +10,6 @@ unit_char = '\\'
 
 
 def separator_type(sep):
-    import click
-
     if len(sep) > 1:
         raise click.BadOptionUsage('separator can only be a char')
     if sep == unit_char:
@@ -19,7 +18,7 @@ def separator_type(sep):
 
 
 def encode_safe_key(path, separator):
-    path = [p.replace(unit_char, unit_char*2) for p in path]
+    path = [p.replace(unit_char, unit_char * 2) for p in path]
     separator = unit_char + separator
     return separator.join(path)
 
