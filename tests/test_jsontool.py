@@ -78,8 +78,8 @@ class TestJSONTool(unittest.TestCase):
 
     def test_expand_with_safe(self):
         data = {
-            "www.a.com":{"qps":100,"p95":20},
-            "api.a.com":{"qps":100,"p95":20,"p99":100},
+            "www.a.com": {"qps": 100, "p95": 20},
+            "api.a.com": {"qps": 100, "p95": 20, "p99": 100},
         }
         expobj = expand(data, safe=True)
         self.assertEqual(expobj['api.a.com\\.p95'], 20)
