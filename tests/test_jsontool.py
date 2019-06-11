@@ -1,10 +1,12 @@
 # coding=utf-8
 # author@alingse
 # 2016.08.09
+from __future__ import unicode_literals
 
 import io
 import unittest
 
+from jsoncsv import PY3
 from jsoncsv.jsontool import expand, restore
 from jsoncsv.jsontool import is_array
 from jsoncsv.jsontool import convert_json
@@ -92,8 +94,11 @@ class TestJSONTool(unittest.TestCase):
 class TestConvertJSON(unittest.TestCase):
 
     def test_convert_expand(self):
-        fin = io.BytesIO('{"a":{"b":3}}\n{"a":{"c":4}}\n')
-        fout = io.BytesIO()
+        fin = io.StringIO('{"a":{"b":3}}\n{"a":{"c":4}}\n')
+        if PY3:
+            fout = io.StringIO()
+        else:
+            fout = io.BytesIO()
 
         convert_json(fin, fout)
 
@@ -103,8 +108,11 @@ class TestConvertJSON(unittest.TestCase):
         fout.close()
 
     def test_convert_restore(self):
-        fin = io.BytesIO('{"a.b": 3}\n{"a.c": 4}\n')
-        fout = io.BytesIO()
+        fin = io.StringIO('{"a.b": 3}\n{"a.c": 4}\n')
+        if PY3:
+            fout = io.StringIO()
+        else:
+            fout = io.BytesIO()
 
         convert_json(fin, fout, type="restore")
 

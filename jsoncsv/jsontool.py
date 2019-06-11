@@ -2,6 +2,7 @@
 # author@alingse
 # 2016.05.27
 from __future__ import absolute_import
+from __future__ import unicode_literals
 
 import json
 
@@ -150,4 +151,4 @@ def convert_json(fin, fout, type="expand", separator=".", safe=False):
             fout.write(content)
         else:
             fout.write(content.encode('utf-8'))
-        fout.write('\n')
+        fout.write(str('\n'))
