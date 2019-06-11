@@ -4,7 +4,7 @@
 
 import unittest
 
-from jsoncsv.dumptool import dumpexcel
+from jsoncsv.dumptool import dump_excel
 
 
 class Testdumptool(unittest.TestCase):
@@ -14,7 +14,7 @@ class Testdumptool(unittest.TestCase):
         fin = open('./fixture/files/expand.1.json', 'r')
         fout = open('./fixture/files/tmp.output.1.csv', 'w')
 
-        dumpexcel(fin, fout, 'csv')
+        dump_excel(fin, fout, 'csv')
         fin.close()
         fout.close()
 
@@ -30,7 +30,7 @@ class Testdumptool(unittest.TestCase):
         fin = open('./fixture/files/expand.1.json', 'r')
         fout = open('./fixture/files/tmp.output.1.sort.csv', 'w')
 
-        dumpexcel(fin, fout, 'csv', sort_type=True)
+        dump_excel(fin, fout, 'csv', sort_type=True)
         fin.close()
         fout.close()
 
@@ -46,7 +46,7 @@ class Testdumptool(unittest.TestCase):
         fin = open('./fixture/files/expand.1.json', 'r')
         fout = open('./fixture/files/tmp.output.1.xls', 'wb')
 
-        dumpexcel(fin, fout, 'xls')
+        dump_excel(fin, fout, 'xls')
 
         fin.close()
         fout.close()

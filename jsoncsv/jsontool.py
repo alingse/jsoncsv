@@ -137,7 +137,7 @@ def restore(expobj, separator='.', safe=False):
 def convert_json(fin, fout, type="expand", separator=".", safe=False):
     if type == "expand":
         func = expand
-    if type == "restore":
+    elif type == "restore":
         func = restore
     else:
         raise ValueError("unknow convert_json type")

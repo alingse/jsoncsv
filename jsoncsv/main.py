@@ -4,7 +4,7 @@ import click
 import sys
 
 from jsoncsv.dumptool import dump_excel
-from jsoncsv.dumptool import convert_json
+from jsoncsv.jsontool import convert_json
 from jsoncsv.utils import separator_type
 
 

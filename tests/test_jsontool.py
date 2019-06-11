@@ -2,13 +2,15 @@
 # author@alingse
 # 2016.08.09
 
+import io
 import unittest
 
 from jsoncsv.jsontool import expand, restore
 from jsoncsv.jsontool import is_array
+from jsoncsv.jsontool import convert_json
 
 
-class Testjsontool(unittest.TestCase):
+class TestJSONTool(unittest.TestCase):
 
     def test_string(self):
         s = "sss"
@@ -73,3 +75,17 @@ class Testjsontool(unittest.TestCase):
 
         expobj = expand(data)
         assert expobj
+
+
+class TestConvertJSON(unittest.TestCase):
+
+    def test_convert_expand(self):
+        fin = io.BytesIO('{"a":{"b":3}}\n{"a":{"c":4}}\n')
+        fout = io.BytesIO()
+
+        convert_json(fin, fout)
+
+        self.assertEqual('{"a.b": 3}\n{"a.c": 4}\n', fout.getvalue())
+
+        fin.close()
+        fout.close()
