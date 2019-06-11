@@ -1,12 +1,10 @@
 # coding=utf-8
 
 import click
-import json
 import sys
 
-from jsoncsv import PY3
-from jsoncsv.jsontool import expand, restore
-from jsoncsv.dumptool import dumpexcel
+from jsoncsv.dumptool import dump_excel
+from jsoncsv.dumptool import convert_json
 from jsoncsv.utils import separator_type
 
 
@@ -18,17 +16,20 @@ from jsoncsv.utils import separator_type
     type=separator_type,
     default='.',
     help='separator')
-@click.option('--safe', is_flag=True, help='use safe mode')
+@click.option(
+    '--safe',
+    is_flag=True,
+    help='use safe mode')
 @click.option(
     '-r',
     '--restore',
-    'restore_',
+    'restore',
     is_flag=True,
     help='restore expanded json')
 @click.option(
     '-e',
     '--expand',
-    'expand_',
+    'expand',
     is_flag=True,
     help='expand json')
 @click.argument(
@@ -39,23 +40,15 @@ from jsoncsv.utils import separator_type
     'output',
     type=click.File('w'),
     default=sys.stdout)
-def jsoncsv(output, input, expand_, restore_, safe, separator):
-    if expand_ and restore_:
+def jsoncsv(output, input, expand, restore, safe, separator):
+    if expand and restore:
         raise click.UsageError('can not choose both, default is `-e`')
 
-    func = expand
-    if restore_:
-        func = restore
+    type = "expand"  # default
+    if restore:
+        type = "restore"
 
-    for line in input:
-        obj = json.loads(line)
-        new = func(obj, separator=separator, safe=safe)
-        content = json.dumps(new, ensure_ascii=False)
-        if PY3:
-            output.write(content)
-        else:
-            output.write(content.encode('utf-8'))
-        output.write('\n')
+    convert_json(input, output, type, separator, safe)
 
     input.close()
     output.close()
@@ -94,7 +87,7 @@ def mkexcel(output, input, sort_, row, type_):
     if output == sys.stdout and type_ == "xls":
         output = click.get_binary_stream('stdout')
 
-    dumpexcel(input, output, type_, read_row=row, sort_type=sort_)
+    dump_excel(input, output, type_, read_row=row, sort_type=sort_)
 
     input.close()
     output.close()
