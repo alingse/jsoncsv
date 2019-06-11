@@ -2,6 +2,9 @@
 # author@alingse
 # 2016.05.27
 from __future__ import absolute_import
+from __future__ import unicode_literals
+
+import json
 
 from copy import deepcopy
 from itertools import groupby
@@ -13,6 +16,7 @@ from jsoncsv.utils import decode_safe_key
 
 
 __all__ = [
+    'convert_json',
     'expand',
     'restore',
     'gen_leaf',
@@ -129,3 +133,22 @@ def restore(expobj, separator='.', safe=False):
 
     origin = from_leaf(leafs)
     return origin
+
+
+def convert_json(fin, fout, type="expand", separator=".", safe=False):
+    if type == "expand":
+        func = expand
+    elif type == "restore":
+        func = restore
+    else:
+        raise ValueError("unknow convert_json type")
+
+    for line in fin:
+        obj = json.loads(line)
+        new = func(obj, separator=separator, safe=safe)
+        content = json.dumps(new, ensure_ascii=False)
+        if PY3:
+            fout.write(content)
+        else:
+            fout.write(content.encode('utf-8'))
+        fout.write(str('\n'))

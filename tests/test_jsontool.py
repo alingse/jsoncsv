@@ -1,14 +1,18 @@
 # coding=utf-8
 # author@alingse
 # 2016.08.09
+from __future__ import unicode_literals
 
+import io
 import unittest
 
+from jsoncsv import PY3
 from jsoncsv.jsontool import expand, restore
 from jsoncsv.jsontool import is_array
+from jsoncsv.jsontool import convert_json
 
 
-class Testjsontool(unittest.TestCase):
+class TestJSONTool(unittest.TestCase):
 
     def test_string(self):
         s = "sss"
@@ -73,3 +77,46 @@ class Testjsontool(unittest.TestCase):
 
         expobj = expand(data)
         assert expobj
+
+    def test_expand_with_safe(self):
+        data = {
+            "www.a.com": {"qps": 100, "p95": 20},
+            "api.a.com": {"qps": 100, "p95": 20, "p99": 100},
+        }
+        expobj = expand(data, safe=True)
+        self.assertEqual(expobj['api.a.com\\.p95'], 20)
+        self.assertEqual(expobj['api.a.com\\.p99'], 100)
+
+        origin = restore(expobj, safe=True)
+        self.assertEqual(origin, data)
+
+
+class TestConvertJSON(unittest.TestCase):
+
+    def test_convert_expand(self):
+        fin = io.StringIO('{"a":{"b":3}}\n{"a":{"c":4}}\n')
+        if PY3:
+            fout = io.StringIO()
+        else:
+            fout = io.BytesIO()
+
+        convert_json(fin, fout)
+
+        self.assertEqual('{"a.b": 3}\n{"a.c": 4}\n', fout.getvalue())
+
+        fin.close()
+        fout.close()
+
+    def test_convert_restore(self):
+        fin = io.StringIO('{"a.b": 3}\n{"a.c": 4}\n')
+        if PY3:
+            fout = io.StringIO()
+        else:
+            fout = io.BytesIO()
+
+        convert_json(fin, fout, type="restore")
+
+        self.assertEqual('{"a": {"b": 3}}\n{"a": {"c": 4}}\n', fout.getvalue())
+
+        fin.close()
+        fout.close()

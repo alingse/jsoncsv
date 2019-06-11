@@ -10,7 +10,7 @@ from jsoncsv.utils import encode_safe_key, decode_safe_key
 class Testescape(unittest.TestCase):
 
     def test_all(self):
-        path = ['A', 'B', '..', '\.\\ww']
+        path = ['A', 'B', '..', '\\.\\ww']
 
         for sep in 'AB.w':
             key = encode_safe_key(path, sep)
@@ -23,10 +23,10 @@ class Testescape(unittest.TestCase):
         sep = '.'
         key = encode_safe_key(path, sep)
 
-        self.assertEqual(key, 'A\.B\.C\.www.xxx.com')
+        self.assertEqual(key, 'A\\.B\\.C\\.www.xxx.com')
 
     def test_decode(self):
-        key = 'A\.B\.C\.www.xxx.com'
+        key = 'A\\.B\\.C\\.www.xxx.com'
         sep = '.'
         path = decode_safe_key(key, sep)
 
