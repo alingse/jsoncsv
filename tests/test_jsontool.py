@@ -76,6 +76,18 @@ class TestJSONTool(unittest.TestCase):
         expobj = expand(data)
         assert expobj
 
+    def test_expand_with_safe(self):
+        data = {
+            "www.a.com":{"qps":100,"p95":20},
+            "api.a.com":{"qps":100,"p95":20,"p99":100},
+        }
+        expobj = expand(data, safe=True)
+        self.assertEqual(expobj['api.a.com\\.p95'], 20)
+        self.assertEqual(expobj['api.a.com\\.p99'], 100)
+
+        origin = restore(expobj, safe=True)
+        self.assertEqual(origin, data)
+
 
 class TestConvertJSON(unittest.TestCase):
 
@@ -86,6 +98,17 @@ class TestConvertJSON(unittest.TestCase):
         convert_json(fin, fout)
 
         self.assertEqual('{"a.b": 3}\n{"a.c": 4}\n', fout.getvalue())
+
+        fin.close()
+        fout.close()
+
+    def test_convert_restore(self):
+        fin = io.BytesIO('{"a.b": 3}\n{"a.c": 4}\n')
+        fout = io.BytesIO()
+
+        convert_json(fin, fout, type="restore")
+
+        self.assertEqual('{"a": {"b": 3}}\n{"a": {"c": 4}}\n', fout.getvalue())
 
         fin.close()
         fout.close()
