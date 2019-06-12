@@ -3,6 +3,8 @@
 import click
 import sys
 
+from jsoncsv import jsontool
+from jsoncsv import dumptool
 from jsoncsv.dumptool import dump_excel
 from jsoncsv.jsontool import convert_json
 from jsoncsv.utils import separator_type
@@ -44,11 +46,11 @@ def jsoncsv(output, input, expand, restore, safe, separator):
     if expand and restore:
         raise click.UsageError('can not choose both, default is `-e`')
 
-    typ = "expand"  # default
+    func = jsontool.expand
     if restore:
-        typ = "restore"
+        func = jsontool.restore
 
-    convert_json(input, output, typ, separator, safe)
+    convert_json(input, output, func, separator, safe)
 
     input.close()
     output.close()
@@ -87,7 +89,11 @@ def mkexcel(output, input, sort_, row, type_):
     if output == sys.stdout and type_ == "xls":
         output = click.get_binary_stream('stdout')
 
-    dump_excel(input, output, type_, read_row=row, sort_type=sort_)
+    klass = dumptool.DumpCSV
+    if type_ == "xls":
+        klass = dumptool.DumpXLS
+
+    dump_excel(input, output, klass, read_row=row, sort_type=sort_)
 
     input.close()
     output.close()

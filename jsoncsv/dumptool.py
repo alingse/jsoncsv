@@ -162,13 +162,9 @@ class DumpXLS(DumpExcel):
         self.wb.save(self.fout)
 
 
-def dump_excel(fin, fout, type_, **kwargs):
-    if type_ == 'csv':
-        DumpKlass = DumpCSV
-    elif type_ == 'xls':
-        DumpKlass = DumpXLS
-    else:
+def dump_excel(fin, fout, klass, **kwargs):
+    if not issubclass(klass, DumpExcel):
         raise ValueError("unknow dumpexcel type")
 
-    dump = DumpKlass(fin, fout, **kwargs)
+    dump = klass(fin, fout, **kwargs)
     dump.dump()

@@ -19,8 +19,6 @@ __all__ = [
     'convert_json',
     'expand',
     'restore',
-    'gen_leaf',
-    'from_leaf',
 ]
 
 
@@ -135,12 +133,8 @@ def restore(expobj, separator='.', safe=False):
     return origin
 
 
-def convert_json(fin, fout, typ="expand", separator=".", safe=False):
-    if typ == "expand":
-        func = expand
-    elif typ == "restore":
-        func = restore
-    else:
+def convert_json(fin, fout, func, separator=".", safe=False):
+    if func not in [expand, restore]:
         raise ValueError("unknow convert_json type")
 
     for line in fin:
