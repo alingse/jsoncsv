@@ -1,6 +1,6 @@
 
-jsoncsv : convert json to csv or xlsx
-==========================================
+jsoncsv : easily convert json to csv or xlsx
+==============================================
 
 .. image:: https://img.shields.io/pypi/v/jsoncsv.svg
     :target: https://pypi.python.org/pypi/jsoncsv
@@ -25,6 +25,20 @@ cat the raw.json to csv/xls on command line
     cat raw.json |jsoncsv |mkexcel > output.csv
     cat raw.json |jsoncsv |mkexcel -t xls > output.xls
 
+or
+
+.. code-block:: bash
+
+    jsoncsv raw.json expand.json
+    mkexcel expand.json -t xls output.xls
+
+more options see --help.
+
+.. code-block:: bash
+
+    jsoncsv --help
+    mkexcel --help
+
 just expand/restore the json
 
 .. code-block:: bash
@@ -46,8 +60,6 @@ safe mod
 
     cat raw.json|jsoncsv --safe|mkexcel > output.csv
 
-    jsoncsv --help
-    mkexcel --help
 
 jsoncsv
 >>>>>>>>
