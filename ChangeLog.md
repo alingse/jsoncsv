@@ -1,3 +1,7 @@
+2019.06.12
+
+- 2.1.0 add convert_json && dump_excel to use as library
+
 2018.05.26
 
 - 2.0.9 support python3
