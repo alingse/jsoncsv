@@ -100,7 +100,7 @@ class TestConvertJSON(unittest.TestCase):
         else:
             fout = io.BytesIO()
 
-        convert_json(fin, fout)
+        convert_json(fin, fout, expand)
 
         self.assertEqual('{"a.b": 3}\n{"a.c": 4}\n', fout.getvalue())
 
@@ -114,7 +114,7 @@ class TestConvertJSON(unittest.TestCase):
         else:
             fout = io.BytesIO()
 
-        convert_json(fin, fout, typ="restore")
+        convert_json(fin, fout, restore)
 
         self.assertEqual('{"a": {"b": 3}}\n{"a": {"c": 4}}\n', fout.getvalue())
 
