@@ -55,7 +55,7 @@ class TestDumpTool(unittest.TestCase):
 
     def test_dump_csv_with_non_ascii(self):
         fin = open('./fixture/files/expand.2.json', 'r')
-        fout = open('./fixture/files/tmp.output.2.csv', 'wb')
+        fout = open('./fixture/files/tmp.output.2.csv', 'w')
 
         dump_excel(fin, fout, DumpCSV)
 
