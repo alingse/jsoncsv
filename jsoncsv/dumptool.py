@@ -2,6 +2,7 @@
 # author@alingse
 # 2015.10.09
 
+import csv
 import json
 import xlwt
 
@@ -17,15 +18,6 @@ class Dump(object):
 
     def initialize(self, **kwargs):
         pass
-
-    def patch(self, value):
-        if value is None:
-            return ''
-
-        if value == {} or value == []:
-            return ''
-
-        return value
 
     def prepare(self):
         pass
@@ -51,7 +43,7 @@ class ReadHeadersMixin(object):
 
         # read
         if not read_row or read_row < 1:
-            read_row = 1
+            read_row = -1
 
         for line in fin:
             obj = json.loads(line)
@@ -100,35 +92,31 @@ class DumpCSV(DumpExcel):
 
     def initialize(self, **kwargs):
         super(DumpCSV, self).initialize(**kwargs)
-
-        self._separator = kwargs.get('separator', ',')
+        self.csv_writer = None
 
     def write_headers(self):
-        header = self._separator.join(self._headers)
-        if PY3:
-            self.fout.write(header)
+        if not PY3:
+            fieldnames = [header.encode('utf8') for header in self._headers]
         else:
-            self.fout.write(header.encode('utf-8'))
-        self.fout.write('\n')
-
-    def patch(self, value):
-        value = super(DumpCSV, self).patch(value)
-        if PY3:
-            return str(value)
-        else:
-            return unicode(value)  # noqa
+            fieldnames = self._headers
+        self.csv_writer = csv.DictWriter(self.fout, fieldnames)
+        self.csv_writer.writeheader()
 
     def write_obj(self, obj):
-        values = [
-            self.patch(obj.get(head))
-            for head in self._headers
-        ]
-        content = self._separator.join(values)
-        if PY3:
-            self.fout.write(content)
-        else:
-            self.fout.write(content.encode('utf-8'))
-        self.fout.write('\n')
+        self.csv_writer.writerow(self.patch_obj(obj))
+
+    def patch_obj(self, obj):
+        new_obj = {}
+        for key, value in obj.items():
+            if value in [None, {}, []]:
+                value = ""
+            if not PY3:
+                key = key.encode('utf8')
+                if isinstance(value, unicode):
+                    value = value.encode('utf8')
+
+            new_obj[key] = value
+        return new_obj
 
 
 class DumpXLS(DumpExcel):
@@ -152,7 +140,7 @@ class DumpXLS(DumpExcel):
         self.cloumn = 0
 
         for head in self._headers:
-            value = self.patch(obj.get(head))
+            value = obj.get(head)
             self.ws.write(self.row, self.cloumn, value)
             self.cloumn += 1
 
