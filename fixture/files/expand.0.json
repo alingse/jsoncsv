@@ -1,4 +1,4 @@
-{"名字": "A","detail.when": 2016, "detail.what": "eat", "title": "AAAA", "detail.where": "beijing", "detail.who.2": "three", "detail.who.1": "two", "detail.who.0": "one"}
-{"名字": "A""detail.when": 2016, "detail.what": "play", "title": "BBBB", "detail.where": "湖北", "detail.who.2": "three", "detail.who.1": "two", "detail.who.0": "one", "detail.how": "offline"}
+{"detail.when": 2016, "detail.what": "eat", "title": "AAAA", "detail.where": "beijing", "detail.who.2": "three", "detail.who.1": "two", "detail.who.0": "one"}
+{"detail.when": 2016, "detail.what": "play", "title": "BBBB", "detail.where": "湖北", "detail.who.2": "three", "detail.who.1": "two", "detail.who.0": "one", "detail.how": "offline"}
 {"detail.when": 2015, "title": "CCCC", "detail.where": "chengdu", "detail.who.1": "three", "detail.who.0": "two"}
 {"detail.when": 2015, "detail.how": "online", "detail.what": "happy", "title": "DDDD"}
