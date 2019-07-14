@@ -9,7 +9,7 @@ from jsoncsv.dumptool import DumpXLS
 from jsoncsv.dumptool import dump_excel
 
 
-class Testdumptool(unittest.TestCase):
+class TestDumpTool(unittest.TestCase):
 
     # FIXME (使用虚拟文件)
     def test_dumpexcel_csv(self):
@@ -47,6 +47,24 @@ class Testdumptool(unittest.TestCase):
     def test_dumpcexcel_xls(self):
         fin = open('./fixture/files/expand.1.json', 'r')
         fout = open('./fixture/files/tmp.output.1.xls', 'wb')
+
+        dump_excel(fin, fout, DumpXLS)
+
+        fin.close()
+        fout.close()
+
+    def test_dump_csv_with_non_ascii(self):
+        fin = open('./fixture/files/expand.2.json', 'r')
+        fout = open('./fixture/files/tmp.output.2.csv', 'w')
+
+        dump_excel(fin, fout, DumpCSV)
+
+        fin.close()
+        fout.close()
+
+    def test_dump_xls_with_non_ascii(self):
+        fin = open('./fixture/files/expand.2.json', 'r')
+        fout = open('./fixture/files/tmp.output.2.xls', 'wb')
 
         dump_excel(fin, fout, DumpXLS)
 

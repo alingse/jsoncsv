@@ -16,8 +16,8 @@ script:
     - python setup.py install
     - cat fixture/files/raw.0.json|jsoncsv -e > fixture/files/tmp.expand.0.json
     - cat fixture/files/raw.0.json|jsoncsv -e|jsoncsv -r|jsoncsv > fixture/files/tmp.expand.0.json
-    - cat fixture/files/raw.2.json|jsoncsv|mkexcel -t xls > fixture/files/tmp.output.2.xls
-    - cat fixture/files/raw.2.json|jsoncsv|mkexcel -t csv > fixture/files/tmp.output.2..csv
+    - cat fixture/files/expand.2.json|jsoncsv|mkexcel -t xls > fixture/files/tmp.output.2.xls
+    - cat fixture/files/expand.2.json|jsoncsv|mkexcel -t csv > fixture/files/tmp.output.2..csv
 after_success:
     - coveralls
 notifications:
