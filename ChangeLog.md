@@ -1,7 +1,3 @@
-2019.07.14
-
-- 2.2.0 use python csv package
-
 2019.06.12
 
 - 2.1.0 add convert_json && dump_excel to use as library
