@@ -2,6 +2,7 @@
 # author@alingse
 # 2015.10.09
 
+import six
 import csv
 import json
 import xlwt
@@ -112,7 +113,7 @@ class DumpCSV(DumpExcel):
                 value = ""
             if not PY3:
                 key = key.encode('utf8')
-                if isinstance(value, unicode):
+                if isinstance(value, six.text_type):
                     value = value.encode('utf8')
 
             new_obj[key] = value
