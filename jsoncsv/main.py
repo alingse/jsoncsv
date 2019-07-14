@@ -1,10 +1,12 @@
 # coding=utf-8
 
+import io
 import click
 import sys
 
 from jsoncsv import jsontool
 from jsoncsv import dumptool
+from jsoncsv import PY3
 from jsoncsv.dumptool import dump_excel
 from jsoncsv.jsontool import convert_json
 from jsoncsv.utils import separator_type
@@ -86,8 +88,11 @@ def jsoncsv(output, input, expand, restore, safe, separator):
     type=click.File('wb'),
     default=sys.stdout)
 def mkexcel(output, input, sort_, row, type_):
-    if output == sys.stdout and type_ == "xls":
+    if type_ == "xls" and output == sys.stdout:
         output = click.get_binary_stream('stdout')
+    if type_ == "csv" and output != sys.stdout:
+        if PY3:
+            output = io.TextIOWrapper(output)
 
     klass = dumptool.DumpCSV
     if type_ == "xls":

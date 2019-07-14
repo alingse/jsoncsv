@@ -97,6 +97,7 @@ class DumpCSV(DumpExcel):
 
     def write_headers(self):
         if not PY3:
+            # Python 2 csv does not support unicode
             fieldnames = [header.encode('utf8') for header in self._headers]
         else:
             fieldnames = self._headers
@@ -111,7 +112,9 @@ class DumpCSV(DumpExcel):
         for key, value in obj.items():
             if value in [None, {}, []]:
                 value = ""
+
             if not PY3:
+                # Python 2 csv does not support unicode
                 key = key.encode('utf8')
                 if isinstance(value, six.text_type):
                     value = value.encode('utf8')
