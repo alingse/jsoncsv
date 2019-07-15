@@ -12,7 +12,7 @@ with io.open('README.rst', encoding='utf-8') as f:
 
 setup(
     name='jsoncsv',
-    version='2.2.0a',
+    version='2.2.0b1',
     url='https://github.com/alingse/jsoncsv',
     description='A command tool easily convert json file to csv or xlsx.',
     long_description=readme,
