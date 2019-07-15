@@ -1,5 +1,5 @@
 
-jsoncsv : easily convert json to csv or xlsx
+jsoncsv : easily convert json to csv or xls[x]
 ==============================================
 
 .. image:: https://img.shields.io/pypi/v/jsoncsv.svg
@@ -18,12 +18,29 @@ It's simple, and no need user to specify the keys. :)
 Quick Start :
 =================
 
-cat the raw.json to csv/xls on command line
+cat the raw.json to csv/xls use command line tool
+
+each line of raw json text file is a json object.
 
 .. code-block:: bash
 
-    cat raw.json |jsoncsv |mkexcel > output.csv
-    cat raw.json |jsoncsv |mkexcel -t xls > output.xls
+    # raw json text,(each line is a json object)
+    # {"id":1, "name":"A"}
+    # {"id":2, "name":"S"}
+    cat raw.json | jsoncsv | mkexcel > output.csv
+    cat raw.json | jsoncsv | mkexcel -t xls > output.xls
+
+a another example
+
+.. code-block:: bash
+
+    echo '{"user":{"id":1,"name":"A"},"week":52}\n{"user":{"id":1,"name":"S"}, "year":2015}'|jsoncsv
+    # {"user.id": 1, "user.name": "A", "week": 52}
+    # {"user.id": 1, "user.name": "S", "year": 2015}
+    echo '{"user":{"id":1,"name":"A"},"week":52}\n{"user":{"id":1,"name":"S"}, "year":2015}'|jsoncsv|mkexcel
+    # user.id,user.name,week,year
+    # 1,A,52,
+    # 1,S,,2015
 
 or
 
@@ -32,14 +49,24 @@ or
     jsoncsv raw.json expand.json
     mkexcel expand.json -t xls output.xls
 
-more options see --help.
+more options see `--help`.
 
 .. code-block:: bash
 
     jsoncsv --help
     mkexcel --help
 
-just expand/restore the json
+Install
+================
+
+.. code-block:: bash
+
+    pip install jsoncsv
+
+
+Usage
+=================
+just expand/restore the json, the expand json is one layer json.
 
 .. code-block:: bash
 
@@ -53,12 +80,7 @@ mkexcel the expanded json (one layer)
 
     mkexcel expand.json output.csv
     mkexcel -t xls expand.json > output.xls
-
-safe mod
-
-.. code-block:: bash
-
-    cat raw.json|jsoncsv --safe|mkexcel > output.csv
+    mkexcel -t csv expand.json > output.csv
 
 
 jsoncsv
@@ -66,13 +88,9 @@ jsoncsv
 
 use jsoncsv to expand json files to 1 layer json
 
-like this：
-
 .. code-block:: bash
 
-    echo '{"s":[1,2,{"w":1}]}'|jsoncsv
-    {"s.2.w": 1,"s.0": 1,"s.1": 2}
-
+    jsoncsv raw.json expand.json
 
 -e, --expand
 -------------
@@ -131,15 +149,12 @@ dump expanded (by **jsoncsv**) json file to csv or xls file
 
 .. code-block:: bash
 
-    mkexcel expand.json -o output.csv
-    cat expand.json|mkexcel > output.csv
-    cat expand.json|mkexcel -t xls > output.xls
-
+    mkexcel expand.json output.csv
 
 -t,--type
 --------------
 
-chose dump type in ['csv', 'xls']
+chose dump type in ['csv', 'xls'] default is 'csv'
 
 .. code-block:: bash
 
@@ -165,3 +180,9 @@ example:
 -----------------------------------------
 
 wait next version
+
+
+3. unicodecsv is not good enough
+-----------------------------------------
+
+but better than python strand library csv.
