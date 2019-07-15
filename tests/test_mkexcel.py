@@ -14,7 +14,7 @@ class TestDumpTool(unittest.TestCase):
     # FIXME (使用虚拟文件)
     def test_dumpexcel_csv(self):
         fin = open('./fixture/files/expand.1.json', 'r')
-        fout = open('./fixture/files/tmp.output.1.csv', 'w')
+        fout = open('./fixture/files/tmp.output.1.csv', 'wb')
 
         dump_excel(fin, fout, DumpCSV)
         fin.close()
@@ -30,7 +30,7 @@ class TestDumpTool(unittest.TestCase):
 
     def test_dumpexcel_csv_with_sort(self):
         fin = open('./fixture/files/expand.1.json', 'r')
-        fout = open('./fixture/files/tmp.output.1.sort.csv', 'w')
+        fout = open('./fixture/files/tmp.output.1.sort.csv', 'wb')
 
         dump_excel(fin, fout, DumpCSV, sort_type=True)
         fin.close()
@@ -55,7 +55,7 @@ class TestDumpTool(unittest.TestCase):
 
     def test_dump_csv_with_non_ascii(self):
         fin = open('./fixture/files/expand.2.json', 'r')
-        fout = open('./fixture/files/tmp.output.2.csv', 'w')
+        fout = open('./fixture/files/tmp.output.2.csv', 'wb')
 
         dump_excel(fin, fout, DumpCSV)
 

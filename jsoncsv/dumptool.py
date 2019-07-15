@@ -3,7 +3,7 @@
 # 2015.10.09
 
 import six
-import csv
+import unicodecsv as csv
 import json
 import xlwt
 
