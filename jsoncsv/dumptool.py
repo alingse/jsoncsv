@@ -2,12 +2,9 @@
 # author@alingse
 # 2015.10.09
 
-import six
 import unicodecsv as csv
 import json
 import xlwt
-
-from jsoncsv import PY2
 
 
 class Dump(object):
