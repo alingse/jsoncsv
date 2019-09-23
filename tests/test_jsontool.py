@@ -6,7 +6,7 @@ from __future__ import unicode_literals
 import io
 import unittest
 
-from jsoncsv import PY3
+from jsoncsv import PY2
 from jsoncsv.jsontool import expand, restore
 from jsoncsv.jsontool import is_array
 from jsoncsv.jsontool import convert_json
@@ -95,10 +95,10 @@ class TestConvertJSON(unittest.TestCase):
 
     def test_convert_expand(self):
         fin = io.StringIO('{"a":{"b":3}}\n{"a":{"c":4}}\n')
-        if PY3:
-            fout = io.StringIO()
-        else:
+        if PY2:
             fout = io.BytesIO()
+        else:
+            fout = io.StringIO()
 
         convert_json(fin, fout, expand)
 
@@ -109,10 +109,10 @@ class TestConvertJSON(unittest.TestCase):
 
     def test_convert_restore(self):
         fin = io.StringIO('{"a.b": 3}\n{"a.c": 4}\n')
-        if PY3:
-            fout = io.StringIO()
-        else:
+        if PY2:
             fout = io.BytesIO()
+        else:
+            fout = io.StringIO()
 
         convert_json(fin, fout, restore)
 

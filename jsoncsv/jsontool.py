@@ -10,7 +10,7 @@ from copy import deepcopy
 from itertools import groupby
 from operator import itemgetter
 
-from jsoncsv import PY3
+from jsoncsv import PY2
 from jsoncsv.utils import encode_safe_key
 from jsoncsv.utils import decode_safe_key
 
@@ -32,10 +32,11 @@ def gen_leaf(root, path=None):
         yield leaf
     else:
         if isinstance(root, dict):
-            if PY3:
-                items = root.items()
-            else:
+            if PY2:
                 items = root.iteritems()
+            else:
+                items = root.items()
+
         else:
             items = enumerate(root)
 
@@ -96,10 +97,10 @@ def expand(origin, separator='.', safe=False):
 
     expobj = {}
     for path, value in leafs:
-        if PY3:
-            path = map(str, path)
-        else:
+        if PY2:
             path = map(unicode, path)  # noqa
+        else:
+            path = map(str, path)
 
         if safe:
             key = encode_safe_key(path, separator)
@@ -113,10 +114,10 @@ def expand(origin, separator='.', safe=False):
 def restore(expobj, separator='.', safe=False):
     leafs = []
 
-    if PY3:
-        items = expobj.items()
-    else:
+    if PY2:
         items = expobj.iteritems()
+    else:
+        items = expobj.items()
 
     for key, value in items:
         if safe:
@@ -141,8 +142,9 @@ def convert_json(fin, fout, func, separator=".", safe=False):
         obj = json.loads(line)
         new = func(obj, separator=separator, safe=safe)
         content = json.dumps(new, ensure_ascii=False)
-        if PY3:
-            fout.write(content)
-        else:
+        if PY2:
             fout.write(content.encode('utf-8'))
+        else:
+            fout.write(content)
+
         fout.write(str('\n'))

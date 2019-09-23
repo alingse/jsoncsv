@@ -4,4 +4,4 @@
 
 import sys
 
-PY3 = bool(sys.version_info[0] == 3)
+PY2 = bool(sys.version_info[0] == 2)

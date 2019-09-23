@@ -2,12 +2,9 @@
 # author@alingse
 # 2015.10.09
 
-import six
 import unicodecsv as csv
 import json
 import xlwt
-
-from jsoncsv import PY3
 
 
 class Dump(object):
@@ -96,12 +93,7 @@ class DumpCSV(DumpExcel):
         self.csv_writer = None
 
     def write_headers(self):
-        if not PY3:
-            # Python 2 csv does not support unicode
-            fieldnames = [header.encode('utf8') for header in self._headers]
-        else:
-            fieldnames = self._headers
-        self.csv_writer = csv.DictWriter(self.fout, fieldnames)
+        self.csv_writer = csv.DictWriter(self.fout, self._headers)
         self.csv_writer.writeheader()
 
     def write_obj(self, obj):
@@ -112,12 +104,6 @@ class DumpCSV(DumpExcel):
         for key, value in obj.items():
             if value in [None, {}, []]:
                 value = ""
-
-            if not PY3:
-                # Python 2 csv does not support unicode
-                key = key.encode('utf8')
-                if isinstance(value, six.text_type):
-                    value = value.encode('utf8')
 
             new_obj[key] = value
         return new_obj
