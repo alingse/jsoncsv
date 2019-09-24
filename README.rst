@@ -24,21 +24,21 @@ cat the raw.json to csv/xls use command line tool
 
 .. code-block:: bash
 
-  cat raw.json| jsoncsv | mkexcel > output.csv
-   cat raw.json| jsoncsv | mkexcel -t xls > output.xls
+    cat raw.json| jsoncsv | mkexcel > output.csv
+    cat raw.json| jsoncsv | mkexcel -t xls > output.xls
 
 make sure each line of raw json text file is a json object
 
 .. code-block:: bash
 
- $cat raw.json
-  {"id":1, "name":"A", "year": 2015}
-  {"id":2, "name":"S", "zone": "china"}
-  $cat raw.json | jsoncsv | mkexcel > output.csv
-  $cat output.csv
-  id,name,year,zone
-  1,A,2015,
-  2,S,,china
+    $cat raw.json
+    {"id":1, "name":"A", "year": 2015}
+    {"id":2, "name":"S", "zone": "china"}
+    $cat raw.json | jsoncsv | mkexcel > output.csv
+    $cat output.csv
+    id,name,year,zone
+    1,A,2015,
+    2,S,,china
 
 This is easily and needn't care the different keys from any two object.
 
@@ -46,27 +46,27 @@ if input file is an json_array, use `-A/--array` to decode it
 
 .. code-block:: bash
 
- $cat raw.json
-  [{"id":1, "name":"A", "year": 2015}, {"id":2, "name":"S", "zone": "china"}]
-  $cat raw.json | jsoncsv -A | mkexcel > output.csv
-  $cat output.csv
-  id,name,year,zone
-  1,A,2015,
-  2,S,,china
+    $cat raw.json
+    [{"id":1, "name":"A", "year": 2015}, {"id":2, "name":"S", "zone": "china"}]
+    $cat raw.json | jsoncsv -A | mkexcel > output.csv
+    $cat output.csv
+    id,name,year,zone
+    1,A,2015,
+    2,S,,china
 
 another way to convert file step by step
 
 .. code-block:: bash
 
- $jsoncsv raw.json expand.json
-  $mkexcel expand.json -t xls output.xls
+    $jsoncsv raw.json expand.json
+    $mkexcel expand.json -t xls output.xls
 
 get more options with `--help`.
 
 .. code-block:: bash
 
     jsoncsv --help
-     mkexcel --help
+    mkexcel --help
 
 Install
 ================
