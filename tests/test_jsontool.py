@@ -120,3 +120,17 @@ class TestConvertJSON(unittest.TestCase):
 
         fin.close()
         fout.close()
+
+    def test_convert_expand_json_array(self):
+        fin = io.StringIO('[{"a":{"b":3}},{"a":{"c":4}}]')
+        if PY2:
+            fout = io.BytesIO()
+        else:
+            fout = io.StringIO()
+
+        convert_json(fin, fout, expand, json_array=True)
+
+        self.assertEqual('{"a.b": 3}\n{"a.c": 4}\n', fout.getvalue())
+
+        fin.close()
+        fout.close()

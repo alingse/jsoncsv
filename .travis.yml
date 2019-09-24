@@ -5,6 +5,7 @@ python:
     - "2.7"
     - "3.5"
     - "3.6"
+    - "3.7"
 install:
     - pip install .
     - pip install flake8
@@ -17,7 +18,9 @@ script:
     - cat fixture/files/raw.0.json|jsoncsv -e > fixture/files/tmp.expand.0.json
     - cat fixture/files/raw.0.json|jsoncsv -e|jsoncsv -r|jsoncsv > fixture/files/tmp.expand.0.json
     - cat fixture/files/expand.2.json|jsoncsv|mkexcel -t xls > fixture/files/tmp.output.2.xls
-    - cat fixture/files/expand.2.json|jsoncsv|mkexcel -t csv > fixture/files/tmp.output.2..csv
+    - cat fixture/files/expand.2.json|jsoncsv|mkexcel -t csv > fixture/files/tmp.output.2.csv
+    - cat fixture/files/raw.1.json|jsoncsv -A|mkexcel > fixture/files/tmp.output.1.csv
+    - cat fixture/files/raw.1.json|jsoncsv --array|mkexcel > fixture/files/tmp.output.1.csv
 after_success:
     - coveralls
 notifications:
