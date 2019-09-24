@@ -134,17 +134,33 @@ def restore(expobj, separator='.', safe=False):
     return origin
 
 
-def convert_json(fin, fout, func, separator=".", safe=False):
+def convert_json(fin, fout, func, separator=".", safe=False, json_array=False):
     if func not in [expand, restore]:
         raise ValueError("unknow convert_json type")
 
-    for line in fin:
-        obj = json.loads(line)
+    # default: read json objects from each line
+    def gen_objs():
+        for line in fin:
+            obj = json.loads(line)
+            yield obj
+
+    objs = gen_objs()
+
+    if json_array:
+        # read all input as json array
+        def gen_objs_from_array():
+            objs = json.load(fin)
+            assert isinstance(objs, list)
+            for obj in objs:
+                yield obj
+
+        objs = gen_objs_from_array()
+
+    for obj in objs:
         new = func(obj, separator=separator, safe=safe)
         content = json.dumps(new, ensure_ascii=False)
         if PY2:
             fout.write(content.encode('utf-8'))
         else:
             fout.write(content)
-
         fout.write(str('\n'))

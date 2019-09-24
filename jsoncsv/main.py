@@ -12,6 +12,13 @@ from jsoncsv.utils import separator_type
 
 @click.command()
 @click.option(
+    '-A',
+    '--array',
+    'json_array',
+    is_flag=True,
+    default=False,
+    help='read input file as json array')
+@click.option(
     '-s',
     '--sep',
     'separator',
@@ -42,7 +49,7 @@ from jsoncsv.utils import separator_type
     'output',
     type=click.File('w'),
     default=sys.stdout)
-def jsoncsv(output, input, expand, restore, safe, separator):
+def jsoncsv(output, input, expand, restore, safe, separator, json_array):
     if expand and restore:
         raise click.UsageError('can not choose both, default is `-e`')
 
@@ -50,7 +57,7 @@ def jsoncsv(output, input, expand, restore, safe, separator):
     if restore:
         func = jsontool.restore
 
-    convert_json(input, output, func, separator, safe)
+    convert_json(input, output, func, separator=separator, safe=safe, json_array=json_array)
 
     input.close()
     output.close()
