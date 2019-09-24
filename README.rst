@@ -11,50 +11,62 @@ jsoncsv : easily convert json to csv or xls[x]
     :target: https://coveralls.io/github/alingse/jsoncsv
 
 
-jsoncsv && mkexcel is a command tool to convert json file to csv/xlsx file.
+jsoncsv (with `mkexcel`) is a command tool to convert json file to csv/xlsx file.
 
-It's simple, and no need user to specify the keys. :)
+It's simple, and no need user to specify the keys.
+
+Just use them.
 
 Quick Start :
 =================
 
 cat the raw.json to csv/xls use command line tool
 
-each line of raw json text file is a json object.
+.. code-block:: bash
+
+  cat raw.json| jsoncsv | mkexcel > output.csv
+   cat raw.json| jsoncsv | mkexcel -t xls > output.xls
+
+make sure each line of raw json text file is a json object
 
 .. code-block:: bash
 
-    # raw json text,(each line is a json object)
-    # {"id":1, "name":"A"}
-    # {"id":2, "name":"S"}
-    cat raw.json | jsoncsv | mkexcel > output.csv
-    cat raw.json | jsoncsv | mkexcel -t xls > output.xls
+ $cat raw.json
+  {"id":1, "name":"A", "year": 2015}
+  {"id":2, "name":"S", "zone": "china"}
+  $cat raw.json | jsoncsv | mkexcel > output.csv
+  $cat output.csv
+  id,name,year,zone
+  1,A,2015,
+  2,S,,china
 
-a another example
+This is easily and needn't care the different keys from any two object.
 
-.. code-block:: bash
-
-    echo '{"user":{"id":1,"name":"A"},"week":52}\n{"user":{"id":1,"name":"S"}, "year":2015}'|jsoncsv
-    # {"user.id": 1, "user.name": "A", "week": 52}
-    # {"user.id": 1, "user.name": "S", "year": 2015}
-    echo '{"user":{"id":1,"name":"A"},"week":52}\n{"user":{"id":1,"name":"S"}, "year":2015}'|jsoncsv|mkexcel
-    # user.id,user.name,week,year
-    # 1,A,52,
-    # 1,S,,2015
-
-or
+if input file is an json_array, use `-A/--array` to decode it
 
 .. code-block:: bash
 
-    jsoncsv raw.json expand.json
-    mkexcel expand.json -t xls output.xls
+ $cat raw.json
+  [{"id":1, "name":"A", "year": 2015}, {"id":2, "name":"S", "zone": "china"}]
+  $cat raw.json | jsoncsv -A | mkexcel > output.csv
+  $cat output.csv
+  id,name,year,zone
+  1,A,2015,
+  2,S,,china
 
-more options see `--help`.
+another way to convert file step by step
+
+.. code-block:: bash
+
+ $jsoncsv raw.json expand.json
+  $mkexcel expand.json -t xls output.xls
+
+get more options with `--help`.
 
 .. code-block:: bash
 
     jsoncsv --help
-    mkexcel --help
+     mkexcel --help
 
 Install
 ================
@@ -66,6 +78,9 @@ Install
 
 Usage
 =================
+
+see #QuickStart and get more options with `--help`.
+
 just expand/restore the json, the expand json is one layer json.
 
 .. code-block:: bash
@@ -81,16 +96,6 @@ mkexcel the expanded json (one layer)
     mkexcel expand.json output.csv
     mkexcel -t xls expand.json > output.xls
     mkexcel -t csv expand.json > output.csv
-
-
-jsoncsv
->>>>>>>>
-
-use jsoncsv to expand json files to 1 layer json
-
-.. code-block:: bash
-
-    jsoncsv raw.json expand.json
 
 -e, --expand
 -------------
@@ -179,7 +184,7 @@ example:
 2. mkexcel enable hooks
 -----------------------------------------
 
-wait next version
+wait next next version
 
 
 3. unicodecsv is not good enough
