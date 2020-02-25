@@ -1,7 +1,5 @@
 # coding=utf-8
-
 import click
-import sys
 
 from jsoncsv import jsontool
 from jsoncsv import dumptool
@@ -52,11 +50,11 @@ def separator_type(sep):
 @click.argument(
     'input',
     type=click.File('r'),
-    default=sys.stdin)
+    default='-')
 @click.argument(
     'output',
     type=click.File('w'),
-    default=sys.stdout)
+    default='-')
 def jsoncsv(output, input, expand, restore, safe, separator, json_array):
     if expand and restore:
         raise click.UsageError('can not choose both, default is `-e`')
@@ -94,16 +92,13 @@ def jsoncsv(output, input, expand, restore, safe, separator, json_array):
     help='enable sort the headers keys')
 @click.argument(
     'input',
-    type=click.File('r'),
-    default=sys.stdin)
+    type=click.File('r', encoding='utf-8'),
+    default='-')
 @click.argument(
     'output',
     type=click.File('wb'),
-    default=sys.stdout)
+    default='-')
 def mkexcel(output, input, sort_, row, type_):
-    if output == sys.stdout:
-        output = click.get_binary_stream('stdout')
-
     klass = dumptool.DumpCSV
     if type_ == "xls":
         klass = dumptool.DumpXLS
