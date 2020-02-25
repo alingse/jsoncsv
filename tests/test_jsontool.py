@@ -6,7 +6,6 @@ from __future__ import unicode_literals
 import io
 import unittest
 
-from jsoncsv import PY2
 from jsoncsv.jsontool import expand, restore
 from jsoncsv.jsontool import is_array_index
 from jsoncsv.jsontool import convert_json
@@ -106,42 +105,33 @@ class TestConvertJSON(unittest.TestCase):
 
     def test_convert_expand(self):
         fin = io.StringIO('{"a":{"b":3}}\n{"a":{"c":4}}\n')
-        if PY2:
-            fout = io.BytesIO()
-        else:
-            fout = io.StringIO()
+        fout = io.BytesIO()
 
         convert_json(fin, fout, expand)
 
-        self.assertEqual('{"a.b": 3}\n{"a.c": 4}\n', fout.getvalue())
+        self.assertEqual(b'{"a.b": 3}\n{"a.c": 4}\n', fout.getvalue())
 
         fin.close()
         fout.close()
 
     def test_convert_restore(self):
         fin = io.StringIO('{"a.b": 3}\n{"a.c": 4}\n')
-        if PY2:
-            fout = io.BytesIO()
-        else:
-            fout = io.StringIO()
+        fout = io.BytesIO()
 
         convert_json(fin, fout, restore)
 
-        self.assertEqual('{"a": {"b": 3}}\n{"a": {"c": 4}}\n', fout.getvalue())
+        self.assertEqual(b'{"a": {"b": 3}}\n{"a": {"c": 4}}\n', fout.getvalue())
 
         fin.close()
         fout.close()
 
     def test_convert_expand_json_array(self):
         fin = io.StringIO('[{"a":{"b":3}},{"a":{"c":4}}]')
-        if PY2:
-            fout = io.BytesIO()
-        else:
-            fout = io.StringIO()
+        fout = io.BytesIO()
 
         convert_json(fin, fout, expand, json_array=True)
 
-        self.assertEqual('{"a.b": 3}\n{"a.c": 4}\n', fout.getvalue())
+        self.assertEqual(b'{"a.b": 3}\n{"a.c": 4}\n', fout.getvalue())
 
         fin.close()
         fout.close()

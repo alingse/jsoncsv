@@ -53,7 +53,7 @@ def separator_type(sep):
     default='-')
 @click.argument(
     'output',
-    type=click.File('w'),
+    type=click.File('wb'),
     default='-')
 def jsoncsv(output, input, expand, restore, safe, separator, json_array):
     if expand and restore:
