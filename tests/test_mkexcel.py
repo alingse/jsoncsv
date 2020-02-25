@@ -3,6 +3,7 @@
 # 2018.03.29
 
 import unittest
+from io import open
 
 from jsoncsv.dumptool import DumpCSV
 from jsoncsv.dumptool import DumpXLS
