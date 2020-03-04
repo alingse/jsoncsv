@@ -8,7 +8,7 @@ import unittest
 
 from jsoncsv import PY2
 from jsoncsv.jsontool import expand, restore
-from jsoncsv.jsontool import is_array
+from jsoncsv.jsontool import is_array_index
 from jsoncsv.jsontool import convert_json
 
 
@@ -63,11 +63,13 @@ class TestJSONTool(unittest.TestCase):
 
         self.assertListEqual(s[4], _s[4])
 
-    def test_is_array(self):
-        assert is_array([0, 1, 2, 3])
-        assert is_array(['0', '1', '2', '3'])
-        assert not is_array([1, 2, 3])
-        assert not is_array(['0', 1, 2])
+    def test_is_array_index(self):
+        self.assertTrue(is_array_index([0, 1, 2, 3]))
+        self.assertTrue(is_array_index(['0', '1', '2', '3']))
+        # string order
+        self.assertTrue(is_array_index(['0', '1', '10', '2', '3', '4', '5', '6', '7', '8', '9']))
+        self.assertFalse(is_array_index([1, 2, 3]))
+        self.assertFalse(is_array_index(['0', 1, 2]))
 
     def test_unicode(self):
         data = [
@@ -89,6 +91,15 @@ class TestJSONTool(unittest.TestCase):
 
         origin = restore(expobj, safe=True)
         self.assertEqual(origin, data)
+
+    def test_expand_and_restore(self):
+        data = ["a", "ab", "b"] * 4
+        expobj = expand(data)
+        self.assertEqual(expobj["0"], "a")
+        self.assertEqual(expobj["1"], "ab")
+
+        origin = restore(expobj)
+        self.assertEqual(data, origin)
 
 
 class TestConvertJSON(unittest.TestCase):

@@ -24,8 +24,8 @@ cat the raw.json to csv/xls use command line tool
 
 .. code-block:: bash
 
-    cat raw.json| jsoncsv | mkexcel > output.csv
-    cat raw.json| jsoncsv | mkexcel -t xls > output.xls
+    cat raw.json | jsoncsv | mkexcel > output.csv
+    cat raw.json | jsoncsv | mkexcel -t xls > output.xls
 
 make sure each line of raw json text file is a json object
 
@@ -87,7 +87,7 @@ just expand/restore the json, the expand json is one layer json.
 
     jsoncsv raw.json expand.json
     jsoncsv -r expand.json raw.json
-    cat raw.json|jsoncsv |jsoncsv -r > raw2.json
+    cat raw.json | jsoncsv | jsoncsv -r > raw2.json
 
 mkexcel the expanded json (one layer)
 
@@ -104,17 +104,17 @@ expand json, 展开 json
 
 .. code-block:: bash
 
-    jsoncsv -e raw.json expand.json
-    cat raw.json expand.json
+    $jsoncsv -e raw.json expand.json
+    $cat raw.json expand.json
     {"s":[1,2,{"w":1}]}
     {"s.2.w": 1,"s.0": 1,"s.1": 2}
 
 
-{"s":[1,2,{"w":1}]} transformed to {"s.2.w": 1,"s.0": 1,"s.1": 2}
+{"s":[1,2,{"w":1}]} will transformed to {"s.2.w": 1,"s.0": 1,"s.1": 2}
 
-expand.json is only one layer json, it can be easy change to csv or xlsx
+the output "expand.json" is only one layer json, it can be easy change to csv or xlsx (with `mkexcel`)
 
--r,--restore
+-r, --restore
 ---------------
 restore the expanded json 重构被展开的json
 
@@ -127,7 +127,7 @@ restore the expanded json 重构被展开的json
 
 {"s.2.w": 1,"s.0": 1,"s.1": 2} change to {"s":[1,2,{"w":1}]}
 
--s,--separator
+-s, --separator
 ---------------
 
 separator used for combine the keys in the tree
@@ -156,7 +156,7 @@ dump expanded (by **jsoncsv**) json file to csv or xls file
 
     mkexcel expand.json output.csv
 
--t,--type
+-t, --type
 --------------
 
 chose dump type in ['csv', 'xls'] default is 'csv'
@@ -191,3 +191,9 @@ wait next next version
 -----------------------------------------
 
 but better than python strand library csv.
+
+4. Windows is poor support
+-----------------------------------------
+see https://github.com/alingse/jsoncsv/issues/37
+
+try use https://jsoncsv.jsonutil.online/ instead
