@@ -140,7 +140,6 @@ def convert_json(fin, fout, func, separator=".", safe=False, json_array=False):
 
     # default: read json objects from each line
     def gen_objs():
-        print(type(fin))
         for line in fin:
             obj = json.loads(line)
             yield obj
