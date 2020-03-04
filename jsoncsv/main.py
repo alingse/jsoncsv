@@ -7,7 +7,15 @@ from jsoncsv import jsontool
 from jsoncsv import dumptool
 from jsoncsv.dumptool import dump_excel
 from jsoncsv.jsontool import convert_json
-from jsoncsv.utils import separator_type
+from jsoncsv.utils import unit_char
+
+
+def separator_type(sep):
+    if len(sep) != 1:
+        raise click.BadOptionUsage('separator can only be a char')
+    if sep == unit_char:
+        raise click.BadOptionUsage('separator can not be `\\` ')
+    return sep
 
 
 @click.command()

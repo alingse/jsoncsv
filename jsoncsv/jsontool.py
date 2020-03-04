@@ -5,7 +5,6 @@ from __future__ import absolute_import
 from __future__ import unicode_literals
 
 import json
-
 from copy import deepcopy
 from itertools import groupby
 from operator import itemgetter
@@ -26,7 +25,6 @@ def gen_leaf(root, path=None):
     if path is None:
         path = []
 
-    # the leaf
     if not isinstance(root, (dict, list)) or not root:
         leaf = (path, root)
         yield leaf
@@ -36,7 +34,6 @@ def gen_leaf(root, path=None):
                 items = root.iteritems()
             else:
                 items = root.items()
-
         else:
             items = enumerate(root)
 
@@ -47,14 +44,17 @@ def gen_leaf(root, path=None):
                 yield leaf
 
 
-def is_array(keys, ensure_str=True):
-    copy_keys = list(deepcopy(keys))
-    int_keys = list(range(len(copy_keys)))
-    if copy_keys == int_keys:
+def is_array_index(keys, enable_str=True):
+    keys = list(deepcopy(keys))
+    # 不强调有序
+    key_map = {key: True for key in keys}
+    int_keys = range(len(keys))
+
+    if all(key in key_map for key in int_keys):
         return True
-    if ensure_str:
-        str_keys = list(map(str, int_keys))
-        if copy_keys == str_keys:
+
+    if enable_str:
+        if all(str(key) in key_map for key in int_keys):
             return True
     return False
 
@@ -84,7 +84,7 @@ def from_leaf(leafs):
         child.append((head, _child))
 
     child_keys = map(_get_head, child)
-    if is_array(child_keys):
+    if is_array_index(child_keys):
         child.sort(key=lambda x: int(x[0]))
         return list(map(_get_leaf, child))
 
@@ -140,6 +140,7 @@ def convert_json(fin, fout, func, separator=".", safe=False, json_array=False):
 
     # default: read json objects from each line
     def gen_objs():
+        print(type(fin))
         for line in fin:
             obj = json.loads(line)
             yield obj
@@ -161,6 +162,7 @@ def convert_json(fin, fout, func, separator=".", safe=False, json_array=False):
         content = json.dumps(new, ensure_ascii=False)
         if PY2:
             fout.write(content.encode('utf-8'))
+            fout.write('\n'.encode('utf-8'))
         else:
             fout.write(content)
-        fout.write(str('\n'))
+            fout.write('\n')
