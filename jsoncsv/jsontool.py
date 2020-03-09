@@ -163,5 +163,5 @@ def convert_json(fin, fout, func, separator=".", safe=False, json_array=False):
             fout.write(content.encode('utf-8'))
             fout.write('\n'.encode('utf-8'))
         else:
-            fout.write(content)
-            fout.write('\n')
+            fout.write(content.encode('utf-8'))
+            fout.write(str('\n').encode('utf-8'))
