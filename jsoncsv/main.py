@@ -49,7 +49,7 @@ def separator_type(sep):
     help='expand json')
 @click.argument(
     'input',
-    type=click.File('r'),
+    type=click.File('r', encoding='utf-8'),
     default='-')
 @click.argument(
     'output',
