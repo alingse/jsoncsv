@@ -135,6 +135,10 @@ def restore(expobj, separator='.', safe=False):
 
 
 def convert_json(fin, fout, func, separator=".", safe=False, json_array=False):
+    '''
+    ensure fin/fout is TextIO
+    '''
+
     if func not in [expand, restore]:
         raise ValueError("unknow convert_json type")
 
@@ -159,9 +163,5 @@ def convert_json(fin, fout, func, separator=".", safe=False, json_array=False):
     for obj in objs:
         new = func(obj, separator=separator, safe=safe)
         content = json.dumps(new, ensure_ascii=False)
-        if PY2:
-            fout.write(content.encode('utf-8'))
-            fout.write('\n'.encode('utf-8'))
-        else:
-            fout.write(content.encode('utf-8'))
-            fout.write(str('\n').encode('utf-8'))
+        fout.write(content)
+        fout.write('\n')

@@ -104,45 +104,45 @@ class TestJSONTool(unittest.TestCase):
 class TestConvertJSON(unittest.TestCase):
 
     def test_convert_expand(self):
-        fin = io.BytesIO(u'{"a":{"b":3}}\n{"a":{"c":4}}\n'.encode('utf-8'))
-        fout = io.BytesIO()
+        fin = io.StringIO(u'{"a":{"b":3}}\n{"a":{"c":4}}\n')
+        fout = io.StringIO()
 
         convert_json(fin, fout, expand)
 
-        self.assertEqual(b'{"a.b": 3}\n{"a.c": 4}\n', fout.getvalue())
+        self.assertEqual('{"a.b": 3}\n{"a.c": 4}\n', fout.getvalue())
 
         fin.close()
         fout.close()
 
     def test_convert_with_unicode(self):
-        fin = io.BytesIO(u'{"河流":{"长度":3}}\n{"河流":{"名字":"长江"}}\n'.encode('utf-8'))
-        fout = io.BytesIO()
+        fin = io.StringIO(u'{"河流":{"长度":3}}\n{"河流":{"名字":"长江"}}\n')
+        fout = io.StringIO()
 
         convert_json(fin, fout, expand)
 
-        self.assertEqual(u'{"河流.长度": 3}\n{"河流.名字": "长江"}\n'.encode('utf-8'), fout.getvalue())
+        self.assertEqual(u'{"河流.长度": 3}\n{"河流.名字": "长江"}\n', fout.getvalue())
 
         fin.close()
         fout.close()
 
     def test_convert_restore(self):
-        fin = io.BytesIO(u'{"a.b": 3}\n{"a.c": 4}\n'.encode('utf-8'))
-        fout = io.BytesIO()
+        fin = io.StringIO(u'{"a.b": 3}\n{"a.c": 4}\n')
+        fout = io.StringIO()
 
         convert_json(fin, fout, restore)
 
-        self.assertEqual(b'{"a": {"b": 3}}\n{"a": {"c": 4}}\n', fout.getvalue())
+        self.assertEqual('{"a": {"b": 3}}\n{"a": {"c": 4}}\n', fout.getvalue())
 
         fin.close()
         fout.close()
 
     def test_convert_expand_json_array(self):
-        fin = io.BytesIO(u'[{"a":{"b":3}},{"a":{"c":4}}]'.encode('utf-8'))
-        fout = io.BytesIO()
+        fin = io.StringIO(u'[{"a":{"b":3}},{"a":{"c":4}}]')
+        fout = io.StringIO()
 
         convert_json(fin, fout, expand, json_array=True)
 
-        self.assertEqual(b'{"a.b": 3}\n{"a.c": 4}\n', fout.getvalue())
+        self.assertEqual('{"a.b": 3}\n{"a.c": 4}\n', fout.getvalue())
 
         fin.close()
         fout.close()
