@@ -42,13 +42,10 @@ setup(
         ],
     },
     keywords=[
+        'jsoncsv',
         'jsontocsv',
         'json2csv',
-        'jsoncsv',
-        'command',
         'convert',
-        'json',
-        'csv',
-        'xls',
+        'json2xls',
     ],
 )
