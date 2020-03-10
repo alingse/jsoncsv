@@ -10,9 +10,13 @@ from jsoncsv.utils import unit_char
 
 def separator_type(sep):
     if len(sep) != 1:
-        raise click.BadOptionUsage('separator can only be a char')
+        raise click.BadOptionUsage(
+            option_name='separator',
+            message='separator can only be a char')
     if sep == unit_char:
-        raise click.BadOptionUsage('separator can not be `\\` ')
+        raise click.BadOptionUsage(
+            option_name='separator',
+            message='separator can not be `\\` ')
     return sep
 
 
