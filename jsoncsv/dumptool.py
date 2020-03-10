@@ -2,13 +2,13 @@
 # author@alingse
 # 2015.10.09
 
-import unicodecsv as csv
 import json
+
+import unicodecsv as csv
 import xlwt
 
 
 class Dump(object):
-
     def __init__(self, fin, fout, **kwargs):
         self.fin = fin
         self.fout = fout
@@ -33,7 +33,6 @@ class Dump(object):
 
 
 class ReadHeadersMixin(object):
-
     @staticmethod
     def load_headers(fin, read_row=None, sort_type=None):
         headers = set()
@@ -58,14 +57,14 @@ class ReadHeadersMixin(object):
 
 
 class DumpExcel(Dump, ReadHeadersMixin):
-
     def initialize(self, **kwargs):
         super(DumpExcel, self).initialize(**kwargs)
         self._read_row = kwargs.get('read_row')
         self._sort_type = kwargs.get('sort_type')
 
     def prepare(self):
-        headers, datas = self.load_headers(self.fin, self._read_row, self._sort_type)
+        headers, datas = self.load_headers(self.fin, self._read_row,
+                                           self._sort_type)
         self._headers = headers
         self._datas = datas
 
@@ -87,7 +86,6 @@ class DumpExcel(Dump, ReadHeadersMixin):
 
 
 class DumpCSV(DumpExcel):
-
     def initialize(self, **kwargs):
         super(DumpCSV, self).initialize(**kwargs)
         self.csv_writer = None
@@ -110,7 +108,6 @@ class DumpCSV(DumpExcel):
 
 
 class DumpXLS(DumpExcel):
-
     def initialize(self, **kwargs):
         super(DumpXLS, self).initialize(**kwargs)
 

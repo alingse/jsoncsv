@@ -1,8 +1,7 @@
 # coding=utf-8
 # author@alingse
 # 2016.05.27
-from __future__ import absolute_import
-from __future__ import unicode_literals
+from __future__ import absolute_import, unicode_literals
 
 import json
 from copy import deepcopy
@@ -10,9 +9,7 @@ from itertools import groupby
 from operator import itemgetter
 
 from jsoncsv import PY2
-from jsoncsv.utils import encode_safe_key
-from jsoncsv.utils import decode_safe_key
-
+from jsoncsv.utils import decode_safe_key, encode_safe_key
 
 __all__ = [
     'convert_json',

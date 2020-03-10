@@ -50,6 +50,13 @@ class Testjsoncsv(unittest.TestCase):
         result = runner.invoke(jsoncsv, args=args)
         assert result.exit_code != 0
 
+    def test_jsoncsv_with_error_sep_args(self):
+        runner = CliRunner()
+        args = ['-s', '\\', '-e', 'fixture/files/raw.0.json',
+                'fixture/files/tmp.expand.0.json']
+        result = runner.invoke(jsoncsv, args=args)
+        assert result.exit_code != 0
+
     def test_jsoncsv_with_error_args_expand_and_restore(self):
         runner = CliRunner()
         args = ['-r', '-e', 'fixture/files/raw.0.json',
