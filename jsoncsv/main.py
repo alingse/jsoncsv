@@ -46,21 +46,22 @@ def separator_type(sep):
     '--expand',
     'expand',
     is_flag=True,
-    help='expand json')
+    help='expand json (default True)')
 @click.argument(
     'input',
     type=click.File('r', encoding='utf-8'),
     default='-')
 @click.argument(
     'output',
-    type=click.File('wb'),
+    type=click.File('w', encoding='utf-8'),
     default='-')
 def jsoncsv(output, input, expand, restore, safe, separator, json_array):
     if expand and restore:
         raise click.UsageError('can not choose both, default is `-e`')
 
-    func = jsontool.expand
-    if restore:
+    if not restore:
+        func = jsontool.expand
+    else:
         func = jsontool.restore
 
     convert_json(input, output, func, separator=separator, safe=safe, json_array=json_array)
