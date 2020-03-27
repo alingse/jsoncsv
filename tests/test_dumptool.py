@@ -70,3 +70,16 @@ class TestDumpTool(unittest.TestCase):
 
         fin.close()
         fout.close()
+
+    def test_dump_xls_with_dict(self):
+        fin = io.StringIO(u'{"a": {}}\n')
+        fout = io.BytesIO()
+
+        dump_excel(fin, fout, DumpXLS)
+
+        fin.close()
+        fout.close()
+
+    def test_dump_excel_with_error(self):
+        with self.assertRaises(ValueError):
+            dump_excel(None, None, None)

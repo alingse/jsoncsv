@@ -95,16 +95,16 @@ class DumpCSV(DumpExcel):
         self.csv_writer.writeheader()
 
     def write_obj(self, obj):
-        self.csv_writer.writerow(self.patch_obj(obj))
+        patched_obj = {
+            key: self.patch_value(value)
+            for key, value in obj.items()
+        }
+        self.csv_writer.writerow(patched_obj)
 
-    def patch_obj(self, obj):
-        new_obj = {}
-        for key, value in obj.items():
-            if value in [None, {}, []]:
-                value = ""
-
-            new_obj[key] = value
-        return new_obj
+    def patch_value(self, value):
+        if value in (None, {}, []):
+            return ""
+        return value
 
 
 class DumpXLS(DumpExcel):
@@ -128,6 +128,9 @@ class DumpXLS(DumpExcel):
 
         for head in self._headers:
             value = obj.get(head)
+            # patch
+            if value in ({},):
+                value = "{}"
             self.ws.write(self.row, self.cloumn, value)
             self.cloumn += 1
 
@@ -138,7 +141,7 @@ class DumpXLS(DumpExcel):
 
 
 def dump_excel(fin, fout, klass, **kwargs):
-    if not issubclass(klass, DumpExcel):
+    if not isinstance(klass, type) or not issubclass(klass, DumpExcel):
         raise ValueError("unknow dumpexcel type")
 
     dump = klass(fin, fout, **kwargs)
