@@ -21,6 +21,7 @@ script:
     - cat fixture/files/expand.2.json|jsoncsv|mkexcel -t csv > fixture/files/tmp.output.2.csv
     - cat fixture/files/raw.1.json|jsoncsv -A|mkexcel > fixture/files/tmp.output.1.csv
     - cat fixture/files/raw.1.json|jsoncsv --array|mkexcel > fixture/files/tmp.output.1.csv
+    - echo '{"a":{}}'|mkexcel -t xls > fixture/files/tmp.output.dict.xls
 after_success:
     - coveralls
 notifications:
