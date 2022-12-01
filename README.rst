@@ -2,12 +2,14 @@
 jsoncsv : easily convert json to csv or xls[x]
 ==============================================
 
-.. image:: https://img.shields.io/pypi/v/jsoncsv.svg
+ |pypi|  |build|  |coverage|
+
+.. |pypi| image:: https://img.shields.io/pypi/v/jsoncsv.svg
     :target: https://pypi.python.org/pypi/jsoncsv
 
-.. image:: https://api.travis-ci.org/alingse/jsoncsv.svg?branch=master
+.. |build| image:: https://api.travis-ci.org/alingse/jsoncsv.svg?branch=master
 
-.. image:: https://coveralls.io/repos/github/alingse/jsoncsv/badge.svg
+.. |coverage| image:: https://coveralls.io/repos/github/alingse/jsoncsv/badge.svg
     :target: https://coveralls.io/github/alingse/jsoncsv
 
 
@@ -20,41 +22,58 @@ Just use them.
 Quick Start :
 =================
 
-cat the raw.json to csv/xls use command line tool
+Cat the raw.json to csv/xls use command line tool
 
 .. code-block:: bash
 
     cat raw.json | jsoncsv | mkexcel > output.csv
     cat raw.json | jsoncsv | mkexcel -t xls > output.xls
 
-make sure each line of raw json text file is a json object
+Each line of raw json text file is a json object
 
-.. code-block:: bash
+.. code-block:: json
 
-    $cat raw.json
     {"id":1, "name":"A", "year": 2015}
     {"id":2, "name":"S", "zone": "china"}
-    $cat raw.json | jsoncsv | mkexcel > output.csv
-    $cat output.csv
+
+Jsoncsv will output a csv file
+
+.. code-block:: 
+
     id,name,year,zone
     1,A,2015,
     2,S,,china
 
 This is easily and needn't care the different keys from any two object.
 
-if input file is an json_array, use `-A/--array` to decode it
+For Json Array
+-------------------
+
+If input file is an json_array, use `-A/--array` to decode it
 
 .. code-block:: bash
 
-    $cat raw.json
-    [{"id":1, "name":"A", "year": 2015}, {"id":2, "name":"S", "zone": "china"}]
-    $cat raw.json | jsoncsv -A | mkexcel > output.csv
-    $cat output.csv
+	cat raw.json | jsoncsv -A | mkexcel > output.csv	
+
+**Input File**
+
+.. code-block:: json
+
+	[
+	    {"id":1, "name":"A", "year": 2015}, 
+	    {"id":2, "name":"S", "zone": "china"}
+	]
+
+**Output File**
+
+.. code-block::
+
     id,name,year,zone
     1,A,2015,
     2,S,,china
 
-another way to convert file step by step
+Step by Step
+---------------------------
 
 .. code-block:: bash
 
