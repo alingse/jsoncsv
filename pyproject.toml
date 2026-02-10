@@ -8,7 +8,7 @@ version = "2.3.0"
 description = "A command tool easily convert json file to csv or xlsx."
 readme = "README.md"
 license = { text = "Apache-2.0" }
-requires-python = ">=3.8"
+requires-python = ">=3.11"
 authors = [
     { name = "alingse", email = "alingse@foxmail.com" }
 ]
@@ -22,12 +22,10 @@ keywords = [
 classifiers = [
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.8",
-    "Programming Language :: Python :: 3.9",
-    "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
     "License :: OSI Approved :: Apache Software License",
 ]
 dependencies = [
@@ -57,7 +55,7 @@ packages = ["jsoncsv"]
 # Ruff configuration
 [tool.ruff]
 line-length = 100
-target-version = "py38"
+target-version = "py311"
 
 [tool.ruff.lint]
 select = [
@@ -80,7 +78,7 @@ known-first-party = ["jsoncsv"]
 
 # MyPy configuration
 [tool.mypy]
-python_version = "3.9"
+python_version = "3.11"
 warn_return_any = true
 warn_unused_configs = true
 ignore_missing_imports = true
@@ -111,4 +109,12 @@ exclude_lines = [
     "def __repr__",
     "raise NotImplementedError",
     "if TYPE_CHECKING:",
+]
+
+[dependency-groups]
+dev = [
+    "mypy>=1.19.1",
+    "pytest>=9.0.2",
+    "pytest-cov>=4.0",
+    "ruff>=0.15.0",
 ]

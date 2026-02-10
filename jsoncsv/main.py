@@ -1,14 +1,19 @@
+import io
 import sys
+from collections.abc import Callable
+from typing import Any
 
 import click
 
-from jsoncsv import dumptool, jsontool
+from jsoncsv import dumptool
 from jsoncsv.dumptool import dump_excel
 from jsoncsv.jsontool import convert_json
+from jsoncsv.jsontool import expand as expand_fn
+from jsoncsv.jsontool import restore as restore_fn
 from jsoncsv.utils import unit_char
 
 
-def separator_type(sep):
+def separator_type(sep: str) -> str:
     if len(sep) != 1:
         raise click.BadOptionUsage(option_name='separator',
                                    message='separator can only be a char')
@@ -44,11 +49,20 @@ def separator_type(sep):
               help='expand json (default True)')
 @click.argument('input', type=click.File('r', encoding='utf-8'), default='-')
 @click.argument('output', type=click.File('w', encoding='utf-8'), default='-')
-def jsoncsv(output, input, expand, restore, safe, separator, json_array):
+def jsoncsv(
+    output: io.TextIOBase,
+    input: io.TextIOBase,
+    expand: bool,
+    restore: bool,
+    safe: bool,
+    separator: str,
+    json_array: bool,
+) -> None:
     if expand and restore:
         raise click.UsageError('can not choose both, default is `-e`')
 
-    func = jsontool.expand if not restore else jsontool.restore
+    func: Callable[..., Any]
+    func = expand_fn if not restore else restore_fn
 
     convert_json(input,
                  output,
@@ -81,14 +95,20 @@ def jsoncsv(output, input, expand, restore, safe, separator, json_array):
               help='enable sort the headers keys')
 @click.argument('input', type=click.File('r', encoding='utf-8'), default='-')
 @click.argument('output', type=click.Path(), default='-')
-def mkexcel(output, input, sort_, row, type_):
-    klass = dumptool.DumpCSV
+def mkexcel(
+    output: str,
+    input: io.TextIOBase,
+    sort_: bool,
+    row: int | None,
+    type_: str,
+) -> None:
+    klass: type[dumptool.DumpExcel] = dumptool.DumpCSV
     if type_ == "xls":
         klass = dumptool.DumpXLS
 
     # Open file in appropriate mode based on type
     if output == '-':
-        fout = sys.stdout.buffer if type_ == 'xls' else sys.stdout
+        fout: Any = sys.stdout.buffer if type_ == 'xls' else sys.stdout
         dump_excel(input, fout, klass, read_row=row, sort_type=sort_)
     else:
         mode = 'wb' if type_ == 'xls' else 'w'
