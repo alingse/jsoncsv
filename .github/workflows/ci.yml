@@ -20,6 +20,15 @@ jobs:
         run: |
           curl -LsSf https://astral.sh/uv/install.sh | sh
           echo "$HOME/.local/bin" >> $GITHUB_PATH
+      - name: Set up UV cache
+        uses: actions/cache@v4
+        with:
+          path: .venv
+          key: uv-${{ runner.os }}-lint-${{ hashFiles('pyproject.toml', 'requirements.txt') }}
+          restore-keys: |
+            uv-${{ runner.os }}-lint-
+      - name: Create virtual environment
+        run: uv venv || true
       - name: Install dependencies
         run: uv pip install -e ".[dev]"
       - name: Run ruff
@@ -42,6 +51,15 @@ jobs:
         run: |
           curl -LsSf https://astral.sh/uv/install.sh | sh
           echo "$HOME/.local/bin" >> $GITHUB_PATH
+      - name: Set up UV cache
+        uses: actions/cache@v4
+        with:
+          path: .venv
+          key: uv-${{ runner.os }}-py${{ matrix.python-version }}-${{ hashFiles('pyproject.toml', 'requirements.txt') }}
+          restore-keys: |
+            uv-${{ runner.os }}-py${{ matrix.python-version }}-
+      - name: Create virtual environment
+        run: uv venv || true
       - name: Install dependencies
         run: uv pip install -e ".[dev]"
       - name: Run tests
@@ -64,6 +82,15 @@ jobs:
         run: |
           curl -LsSf https://astral.sh/uv/install.sh | sh
           echo "$HOME/.local/bin" >> $GITHUB_PATH
+      - name: Set up UV cache
+        uses: actions/cache@v4
+        with:
+          path: .venv
+          key: uv-${{ runner.os }}-build-${{ hashFiles('pyproject.toml') }}
+          restore-keys: |
+            uv-${{ runner.os }}-build-
+      - name: Create virtual environment
+        run: uv venv || true
       - name: Build package
         run: |
           uv pip install build twine
