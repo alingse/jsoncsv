@@ -1,17 +1,27 @@
 # author@alingse
 # 2016.11.20
 
+from typing import Union
+
+# Type aliases for JSON data structures
+JsonType = Union[dict[str, 'JsonType'], list['JsonType'], str, int, float, bool, None]
+PathType = list[Union[int, str]]  # Can contain ints (array indices) or strings (dict keys)
+DecodedPathType = list[str]  # Decoded paths from keys are always strings
+LeafType = tuple[PathType, JsonType]
+# Type for leafs that can contain either PathType (from gen_leaf) or DecodedPathType (from restore)
+LeafInputType = Union[LeafType, tuple[DecodedPathType, JsonType]]
+
 unit_char = '\\'
 
 
-def encode_safe_key(path, separator):
+def encode_safe_key(path: list[str], separator: str) -> str:
     path = [p.replace(unit_char, unit_char * 2) for p in path]
     separator = unit_char + separator
     return separator.join(path)
 
 
-def decode_safe_key(key, separator):
-    path = []
+def decode_safe_key(key: str, separator: str) -> list[str]:
+    path: list[str] = []
     p = ''
     escape = False
 
