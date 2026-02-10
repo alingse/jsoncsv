@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "jsoncsv"
-version = "2.3.0"
+version = "3.0.0"
 description = "A command tool easily convert json file to csv or xlsx."
 readme = "README.md"
 license = { text = "Apache-2.0" }
