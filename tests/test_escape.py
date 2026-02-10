@@ -1,10 +1,9 @@
-# coding=utf-8
 # author@alingse
 # 2016.11.21
 
 import unittest
 
-from jsoncsv.utils import encode_safe_key, decode_safe_key
+from jsoncsv.utils import decode_safe_key, encode_safe_key
 
 
 class Testescape(unittest.TestCase):

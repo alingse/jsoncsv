@@ -1,9 +1,8 @@
-# coding=utf-8
 # author@alingse
 # 2016.08.09
-import io
 import json
 import unittest
+
 from click.testing import CliRunner
 
 from jsoncsv.main import jsoncsv
@@ -35,10 +34,10 @@ class Testjsoncsv(unittest.TestCase):
                                      'fixture/files/tmp.restore.2.json'])
         assert result.exit_code == 0
 
-        with io.open('fixture/files/raw.2.json', 'r') as f:
+        with open('fixture/files/raw.2.json') as f:
             input_data = [json.loads(line) for line in f]
 
-        with io.open('fixture/files/tmp.restore.2.json', 'r') as f:
+        with open('fixture/files/tmp.restore.2.json') as f:
             resotre_data = [json.loads(line) for line in f]
 
         self.assertEqual(input_data, resotre_data)
