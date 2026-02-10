@@ -19,9 +19,9 @@ from jsoncsv.utils import (
 )
 
 __all__ = [
-    'convert_json',
-    'expand',
-    'restore',
+    "convert_json",
+    "expand",
+    "restore",
 ]
 
 # Type alias for the func parameter in convert_json
@@ -90,7 +90,7 @@ def from_leaf(leafs: Iterable[LeafInputType]) -> JsonType:
     return dict(child)  # type: ignore[arg-type]
 
 
-def expand(origin: JsonType, separator: str = '.', safe: bool = False) -> dict[str, JsonType]:
+def expand(origin: JsonType, separator: str = ".", safe: bool = False) -> dict[str, JsonType]:
     root = origin
     leafs = gen_leaf(root)
 
@@ -105,7 +105,7 @@ def expand(origin: JsonType, separator: str = '.', safe: bool = False) -> dict[s
     return expobj
 
 
-def restore(expobj: dict[str, JsonType], separator: str = '.', safe: bool = False) -> JsonType:
+def restore(expobj: dict[str, JsonType], separator: str = ".", safe: bool = False) -> JsonType:
     leafs: list[tuple[DecodedPathType, JsonType]] = []
 
     items = expobj.items()
@@ -113,7 +113,7 @@ def restore(expobj: dict[str, JsonType], separator: str = '.', safe: bool = Fals
     for key, value in items:
         path: DecodedPathType = decode_safe_key(key, separator) if safe else key.split(separator)
 
-        if key == '':
+        if key == "":
             path = []
 
         leafs.append((path, value))
@@ -126,13 +126,13 @@ def convert_json(
     fin: io.TextIOBase,
     fout: io.TextIOBase,
     func: ConvertFunc,
-    separator: str = '.',
+    separator: str = ".",
     safe: bool = False,
     json_array: bool = False,
 ) -> None:
-    '''
+    """
     ensure fin/fout is TextIO
-    '''
+    """
 
     if func not in [expand, restore]:
         raise ValueError("unknow convert_json type")
@@ -158,4 +158,4 @@ def convert_json(
         new = func(obj, separator=separator, safe=safe)
         content = json.dumps(new, ensure_ascii=False)
         fout.write(content)
-        fout.write('\n')
+        fout.write("\n")

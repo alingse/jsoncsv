@@ -67,8 +67,8 @@ class ReadHeadersMixin:
 class DumpExcel(Dump, ReadHeadersMixin):
     def initialize(self, **kwargs: Any) -> None:
         super().initialize(**kwargs)
-        self._read_row = kwargs.get('read_row')
-        self._sort_type = kwargs.get('sort_type')
+        self._read_row = kwargs.get("read_row")
+        self._sort_type = kwargs.get("sort_type")
 
     def prepare(self) -> None:
         headers, datas = self.load_headers(self.fin, self._read_row, self._sort_type)
@@ -104,10 +104,7 @@ class DumpCSV(DumpExcel):
         self.csv_writer.writeheader()
 
     def write_obj(self, obj: dict[str, JsonType]) -> None:
-        patched_obj: dict[str, str] = {
-            key: self.patch_value(value)
-            for key, value in obj.items()
-        }
+        patched_obj: dict[str, str] = {key: self.patch_value(value) for key, value in obj.items()}
         assert self.csv_writer is not None
         self.csv_writer.writerow(patched_obj)
 
@@ -121,8 +118,8 @@ class DumpXLS(DumpExcel):
     def initialize(self, **kwargs: Any) -> None:
         super().initialize(**kwargs)
 
-        self.sheet = kwargs.get('sheet', 'Sheet1')
-        self.wb = xlwt.Workbook(encoding='utf-8')
+        self.sheet = kwargs.get("sheet", "Sheet1")
+        self.wb = xlwt.Workbook(encoding="utf-8")
         self.ws = self.wb.add_sheet(self.sheet)
         self.row = 0
         self.cloumn = 0

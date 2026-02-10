@@ -2,14 +2,14 @@
 # 2016.11.20
 
 # Type aliases for JSON data structures
-JsonType = dict[str, 'JsonType'] | list['JsonType'] | str | int | float | bool | None
+JsonType = dict[str, "JsonType"] | list["JsonType"] | str | int | float | bool | None
 PathType = list[int | str]  # Can contain ints (array indices) or strings (dict keys)
 DecodedPathType = list[str]  # Decoded paths from keys are always strings
 LeafType = tuple[PathType, JsonType]
 # Type for leafs that can contain either PathType (from gen_leaf) or DecodedPathType (from restore)
 LeafInputType = LeafType | tuple[DecodedPathType, JsonType]
 
-unit_char = '\\'
+unit_char = "\\"
 
 
 def encode_safe_key(path: list[str], separator: str) -> str:
@@ -20,13 +20,13 @@ def encode_safe_key(path: list[str], separator: str) -> str:
 
 def decode_safe_key(key: str, separator: str) -> list[str]:
     path: list[str] = []
-    p = ''
+    p = ""
     escape = False
 
     for char in key:
         if escape and char == separator:
             path.append(p)
-            p = ''
+            p = ""
             escape = False
         elif escape and char == unit_char:
             p += unit_char
@@ -36,6 +36,6 @@ def decode_safe_key(key: str, separator: str) -> list[str]:
         else:
             p += char
 
-    if p != '':
+    if p != "":
         path.append(p)
     return path
