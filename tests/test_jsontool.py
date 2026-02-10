@@ -1,14 +1,10 @@
-# coding=utf-8
 # author@alingse
 # 2016.08.09
-from __future__ import unicode_literals
 
 import io
 import unittest
 
-from jsoncsv.jsontool import expand, restore
-from jsoncsv.jsontool import is_array_index
-from jsoncsv.jsontool import convert_json
+from jsoncsv.jsontool import convert_json, expand, is_array_index, restore
 
 
 class TestJSONTool(unittest.TestCase):
@@ -72,8 +68,8 @@ class TestJSONTool(unittest.TestCase):
 
     def test_unicode(self):
         data = [
-            {u"河流名字": u"长江", u"河流长度": u"6000千米"},
-            {u"河流名字": u"黄河", u"河流长度": u"5000千米"}
+            {"河流名字": "长江", "河流长度": "6000千米"},
+            {"河流名字": "黄河", "河流长度": "5000千米"}
         ]
 
         expobj = expand(data)
@@ -104,7 +100,7 @@ class TestJSONTool(unittest.TestCase):
 class TestConvertJSON(unittest.TestCase):
 
     def test_convert_expand(self):
-        fin = io.StringIO(u'{"a":{"b":3}}\n{"a":{"c":4}}\n')
+        fin = io.StringIO('{"a":{"b":3}}\n{"a":{"c":4}}\n')
         fout = io.StringIO()
 
         convert_json(fin, fout, expand)
@@ -115,18 +111,18 @@ class TestConvertJSON(unittest.TestCase):
         fout.close()
 
     def test_convert_with_unicode(self):
-        fin = io.StringIO(u'{"河流":{"长度":3}}\n{"河流":{"名字":"长江"}}\n')
+        fin = io.StringIO('{"河流":{"长度":3}}\n{"河流":{"名字":"长江"}}\n')
         fout = io.StringIO()
 
         convert_json(fin, fout, expand)
 
-        self.assertEqual(u'{"河流.长度": 3}\n{"河流.名字": "长江"}\n', fout.getvalue())
+        self.assertEqual('{"河流.长度": 3}\n{"河流.名字": "长江"}\n', fout.getvalue())
 
         fin.close()
         fout.close()
 
     def test_convert_restore(self):
-        fin = io.StringIO(u'{"a.b": 3}\n{"a.c": 4}\n')
+        fin = io.StringIO('{"a.b": 3}\n{"a.c": 4}\n')
         fout = io.StringIO()
 
         convert_json(fin, fout, restore)
@@ -137,7 +133,7 @@ class TestConvertJSON(unittest.TestCase):
         fout.close()
 
     def test_convert_expand_json_array(self):
-        fin = io.StringIO(u'[{"a":{"b":3}},{"a":{"c":4}}]')
+        fin = io.StringIO('[{"a":{"b":3}},{"a":{"c":4}}]')
         fout = io.StringIO()
 
         convert_json(fin, fout, expand, json_array=True)

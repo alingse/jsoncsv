@@ -1,8 +1,8 @@
-# coding=utf-8
 # author@alingse
 # 2020.03.10
 
 import unittest
+
 from click.testing import CliRunner
 
 from jsoncsv.main import mkexcel

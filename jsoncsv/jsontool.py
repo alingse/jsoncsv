@@ -1,14 +1,11 @@
-# coding=utf-8
 # author@alingse
 # 2016.05.27
-from __future__ import absolute_import, unicode_literals
 
 import json
 from copy import deepcopy
 from itertools import groupby
 from operator import itemgetter
 
-from jsoncsv import PY2
 from jsoncsv.utils import decode_safe_key, encode_safe_key
 
 __all__ = [
@@ -26,13 +23,7 @@ def gen_leaf(root, path=None):
         leaf = (path, root)
         yield leaf
     else:
-        if isinstance(root, dict):
-            if PY2:
-                items = root.iteritems()
-            else:
-                items = root.items()
-        else:
-            items = enumerate(root)
+        items = root.items() if isinstance(root, dict) else enumerate(root)
 
         for key, value in items:
             _path = deepcopy(path)
@@ -44,16 +35,13 @@ def gen_leaf(root, path=None):
 def is_array_index(keys, enable_str=True):
     keys = list(deepcopy(keys))
     # 不强调有序
-    key_map = {key: True for key in keys}
+    key_map = dict.fromkeys(keys, True)
     int_keys = range(len(keys))
 
     if all(key in key_map for key in int_keys):
         return True
 
-    if enable_str:
-        if all(str(key) in key_map for key in int_keys):
-            return True
-    return False
+    return bool(enable_str and all(str(key) in key_map for key in int_keys))
 
 
 def from_leaf(leafs):
@@ -94,15 +82,9 @@ def expand(origin, separator='.', safe=False):
 
     expobj = {}
     for path, value in leafs:
-        if PY2:
-            path = map(unicode, path)  # noqa
-        else:
-            path = map(str, path)
+        path = map(str, path)
 
-        if safe:
-            key = encode_safe_key(path, separator)
-        else:
-            key = separator.join(path)
+        key = encode_safe_key(path, separator) if safe else separator.join(path)
         expobj[key] = value
 
     return expobj
@@ -111,16 +93,10 @@ def expand(origin, separator='.', safe=False):
 def restore(expobj, separator='.', safe=False):
     leafs = []
 
-    if PY2:
-        items = expobj.iteritems()
-    else:
-        items = expobj.items()
+    items = expobj.items()
 
     for key, value in items:
-        if safe:
-            path = decode_safe_key(key, separator)
-        else:
-            path = key.split(separator)
+        path = decode_safe_key(key, separator) if safe else key.split(separator)
 
         if key == '':
             path = []
@@ -152,8 +128,7 @@ def convert_json(fin, fout, func, separator=".", safe=False, json_array=False):
         def gen_objs_from_array():
             objs = json.load(fin)
             assert isinstance(objs, list)
-            for obj in objs:
-                yield obj
+            yield from objs
 
         objs = gen_objs_from_array()
 

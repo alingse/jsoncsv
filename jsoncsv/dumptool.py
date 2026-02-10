@@ -1,14 +1,13 @@
-# coding=utf-8
 # author@alingse
 # 2015.10.09
 
+import csv
 import json
 
-import unicodecsv as csv
 import xlwt
 
 
-class Dump(object):
+class Dump:
     def __init__(self, fin, fout, **kwargs):
         self.fin = fin
         self.fout = fout
@@ -32,9 +31,9 @@ class Dump(object):
         self.on_finish()
 
 
-class ReadHeadersMixin(object):
+class ReadHeadersMixin:
     @staticmethod
-    def load_headers(fin, read_row=None, sort_type=None):
+    def load_headers(fin, read_row=None, sort_type=None):  # noqa: ARG004 - reserved for future use
         headers = set()
         datas = []
 
@@ -51,14 +50,14 @@ class ReadHeadersMixin(object):
             if not read_row:
                 break
         # TODO: add some sort_type here
-        headers = sorted(list(headers))
+        headers = sorted(headers)
 
         return (list(headers), datas)
 
 
 class DumpExcel(Dump, ReadHeadersMixin):
     def initialize(self, **kwargs):
-        super(DumpExcel, self).initialize(**kwargs)
+        super().initialize(**kwargs)
         self._read_row = kwargs.get('read_row')
         self._sort_type = kwargs.get('sort_type')
 
@@ -87,7 +86,7 @@ class DumpExcel(Dump, ReadHeadersMixin):
 
 class DumpCSV(DumpExcel):
     def initialize(self, **kwargs):
-        super(DumpCSV, self).initialize(**kwargs)
+        super().initialize(**kwargs)
         self.csv_writer = None
 
     def write_headers(self):
@@ -109,7 +108,7 @@ class DumpCSV(DumpExcel):
 
 class DumpXLS(DumpExcel):
     def initialize(self, **kwargs):
-        super(DumpXLS, self).initialize(**kwargs)
+        super().initialize(**kwargs)
 
         self.sheet = kwargs.get('sheet', 'Sheet1')
         self.wb = xlwt.Workbook(encoding='utf-8')

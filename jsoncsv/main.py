@@ -1,4 +1,5 @@
-# coding=utf-8
+import sys
+
 import click
 
 from jsoncsv import dumptool, jsontool
@@ -47,10 +48,7 @@ def jsoncsv(output, input, expand, restore, safe, separator, json_array):
     if expand and restore:
         raise click.UsageError('can not choose both, default is `-e`')
 
-    if not restore:
-        func = jsontool.expand
-    else:
-        func = jsontool.restore
+    func = jsontool.expand if not restore else jsontool.restore
 
     convert_json(input,
                  output,
@@ -82,13 +80,21 @@ def jsoncsv(output, input, expand, restore, safe, separator, json_array):
               default=False,
               help='enable sort the headers keys')
 @click.argument('input', type=click.File('r', encoding='utf-8'), default='-')
-@click.argument('output', type=click.File('wb'), default='-')
+@click.argument('output', type=click.Path(), default='-')
 def mkexcel(output, input, sort_, row, type_):
     klass = dumptool.DumpCSV
     if type_ == "xls":
         klass = dumptool.DumpXLS
 
-    dump_excel(input, output, klass, read_row=row, sort_type=sort_)
+    # Open file in appropriate mode based on type
+    if output == '-':
+        fout = sys.stdout.buffer if type_ == 'xls' else sys.stdout
+        dump_excel(input, fout, klass, read_row=row, sort_type=sort_)
+    else:
+        mode = 'wb' if type_ == 'xls' else 'w'
+        encoding = None if type_ == 'xls' else 'utf-8'
+        newline = '' if type_ == 'csv' else None
+        with open(output, mode, encoding=encoding, newline=newline) as fout:
+            dump_excel(input, fout, klass, read_row=row, sort_type=sort_)
 
     input.close()
-    output.close()
