@@ -1,12 +1,13 @@
 import io
 import sys
-from typing import Any, BinaryIO, Callable, IO, Union
+from collections.abc import Callable
+from typing import Any
 
 import click
 
-from jsoncsv import dumptool, jsontool
+from jsoncsv import dumptool
 from jsoncsv.dumptool import dump_excel
-from jsoncsv.jsontool import JsonType, convert_json
+from jsoncsv.jsontool import convert_json
 from jsoncsv.jsontool import expand as expand_fn
 from jsoncsv.jsontool import restore as restore_fn
 from jsoncsv.utils import unit_char
@@ -98,7 +99,7 @@ def mkexcel(
     output: str,
     input: io.TextIOBase,
     sort_: bool,
-    row: Union[int, None],
+    row: int | None,
     type_: str,
 ) -> None:
     klass: type[dumptool.DumpExcel] = dumptool.DumpCSV
@@ -107,11 +108,7 @@ def mkexcel(
 
     # Open file in appropriate mode based on type
     if output == '-':
-        fout: Any
-        if type_ == 'xls':
-            fout = sys.stdout.buffer
-        else:
-            fout = sys.stdout
+        fout: Any = sys.stdout.buffer if type_ == 'xls' else sys.stdout
         dump_excel(input, fout, klass, read_row=row, sort_type=sort_)
     else:
         mode = 'wb' if type_ == 'xls' else 'w'

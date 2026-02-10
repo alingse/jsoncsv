@@ -3,12 +3,20 @@
 
 import io
 import json
+from collections.abc import Callable, Iterable, Iterator
 from copy import deepcopy
 from itertools import groupby
 from operator import itemgetter
-from typing import Callable, Iterable, Iterator, List, Optional, Union
 
-from jsoncsv.utils import DecodedPathType, JsonType, LeafInputType, LeafType, PathType, decode_safe_key, encode_safe_key
+from jsoncsv.utils import (
+    DecodedPathType,
+    JsonType,
+    LeafInputType,
+    LeafType,
+    PathType,
+    decode_safe_key,
+    encode_safe_key,
+)
 
 __all__ = [
     'convert_json',
@@ -18,13 +26,10 @@ __all__ = [
 
 # Type alias for the func parameter in convert_json
 # Use ... to indicate additional keyword arguments are accepted
-ConvertFunc = Union[
-    Callable[..., dict[str, JsonType]],  # expand signature
-    Callable[..., JsonType],             # restore signature
-]
+ConvertFunc = Callable[..., dict[str, JsonType]] | Callable[..., JsonType]
 
 
-def gen_leaf(root: JsonType, path: Optional[PathType] = None) -> Iterator[LeafType]:
+def gen_leaf(root: JsonType, path: PathType | None = None) -> Iterator[LeafType]:
     if path is None:
         path = []
 
@@ -41,7 +46,7 @@ def gen_leaf(root: JsonType, path: Optional[PathType] = None) -> Iterator[LeafTy
                 yield leaf
 
 
-def is_array_index(keys: Iterable[Union[int, str]], enable_str: bool = True) -> bool:
+def is_array_index(keys: Iterable[int | str], enable_str: bool = True) -> bool:
     keys = list(deepcopy(keys))
     # 不强调有序
     key_map = dict.fromkeys(keys, True)
@@ -67,10 +72,10 @@ def from_leaf(leafs: Iterable[LeafInputType]) -> JsonType:
     _get_head = itemgetter(0)
     _get_leaf = itemgetter(1)
 
-    zlist = list(zip(heads, leafs))
+    zlist = list(zip(heads, leafs, strict=True))
     glist = groupby(sorted(zlist, key=_get_head), key=_get_head)
 
-    child: list[tuple[Union[int, str], JsonType]] = []
+    child: list[tuple[int | str, JsonType]] = []
     for g in glist:
         head, _zlist = g
         _leafs = map(_get_leaf, _zlist)
@@ -92,7 +97,7 @@ def expand(origin: JsonType, separator: str = '.', safe: bool = False) -> dict[s
     expobj: dict[str, JsonType] = {}
     for path, value in leafs:
         # Convert path elements to strings
-        str_path: List[str] = [str(p) for p in path]
+        str_path: list[str] = [str(p) for p in path]
 
         key = encode_safe_key(str_path, separator) if safe else separator.join(str_path)
         expobj[key] = value

@@ -4,7 +4,7 @@
 import csv
 import io
 import json
-from typing import Any, Dict, List, Optional, Tuple, Union
+from typing import Any
 
 import xlwt
 
@@ -12,7 +12,7 @@ from jsoncsv.utils import JsonType
 
 
 class Dump:
-    def __init__(self, fin: io.TextIOBase, fout: Union[io.TextIOBase, io.BytesIO], **kwargs: Any) -> None:
+    def __init__(self, fin: io.TextIOBase, fout: io.TextIOBase | io.BytesIO, **kwargs: Any) -> None:
         self.fin = fin
         self.fout = fout
         self.initialize(**kwargs)
@@ -39,11 +39,11 @@ class ReadHeadersMixin:
     @staticmethod
     def load_headers(
         fin: io.TextIOBase,
-        read_row: Optional[int] = None,
-        sort_type: Optional[bool] = None,  # noqa: ARG004 - reserved for future use
-    ) -> Tuple[List[str], List[Dict[str, JsonType]]]:
+        read_row: int | None = None,
+        sort_type: bool | None = None,  # noqa: ARG004 - reserved for future use
+    ) -> tuple[list[str], list[dict[str, JsonType]]]:
         headers: set[str] = set()
-        datas: List[Dict[str, JsonType]] = []
+        datas: list[dict[str, JsonType]] = []
 
         # read
         if not read_row or read_row < 1:
@@ -78,7 +78,7 @@ class DumpExcel(Dump, ReadHeadersMixin):
     def write_headers(self) -> None:
         raise NotImplementedError
 
-    def write_obj(self, obj: Dict[str, JsonType]) -> None:
+    def write_obj(self, obj: dict[str, JsonType]) -> None:
         raise NotImplementedError
 
     def dump_file(self) -> None:
@@ -96,15 +96,15 @@ class DumpExcel(Dump, ReadHeadersMixin):
 class DumpCSV(DumpExcel):
     def initialize(self, **kwargs: Any) -> None:
         super().initialize(**kwargs)
-        self.csv_writer: Optional[csv.DictWriter[str]] = None
+        self.csv_writer: csv.DictWriter[str] | None = None
 
     def write_headers(self) -> None:
         assert isinstance(self.fout, io.TextIOBase)
         self.csv_writer = csv.DictWriter(self.fout, self._headers)
         self.csv_writer.writeheader()
 
-    def write_obj(self, obj: Dict[str, JsonType]) -> None:
-        patched_obj: Dict[str, str] = {
+    def write_obj(self, obj: dict[str, JsonType]) -> None:
+        patched_obj: dict[str, str] = {
             key: self.patch_value(value)
             for key, value in obj.items()
         }
@@ -133,7 +133,7 @@ class DumpXLS(DumpExcel):
             self.cloumn += 1
         self.row += 1
 
-    def write_obj(self, obj: Dict[str, JsonType]) -> None:
+    def write_obj(self, obj: dict[str, JsonType]) -> None:
         self.cloumn = 0
 
         for head in self._headers:
@@ -153,7 +153,7 @@ class DumpXLS(DumpExcel):
 
 def dump_excel(
     fin: io.TextIOBase,
-    fout: Union[io.TextIOBase, io.BytesIO],
+    fout: io.TextIOBase | io.BytesIO,
     klass: type[DumpExcel],
     **kwargs: Any,
 ) -> None:
