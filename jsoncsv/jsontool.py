@@ -140,6 +140,8 @@ def convert_json(
     # default: read json objects from each line
     def gen_objs() -> Iterator[JsonType]:
         for line in fin:
+            if not line.strip():
+                continue
             obj = json.loads(line)
             yield obj
 
